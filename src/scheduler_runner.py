@@ -27,7 +27,7 @@ def build_report(
     """
 
     report = (
-        "📁 Weekly File Automation Report\n\n"
+        "📁 Daily File Automation Report\n\n"
     )
 
     report += (

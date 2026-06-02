@@ -7,11 +7,17 @@ from config import (
 
 def send_summary(message):
 
-    webhook = DiscordWebhook(
-        url=DISCORD_WEBHOOK_URL,
-        content=message
-    )
+    try:
 
-    response = webhook.execute()
+        webhook = DiscordWebhook(
+            url=DISCORD_WEBHOOK_URL,
+            content=message
+        )
 
-    return response
+        webhook.execute()
+
+    except Exception as error:
+
+        print(
+            f"Discord error: {error}"
+        )

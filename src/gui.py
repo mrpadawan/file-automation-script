@@ -17,6 +17,7 @@ from detector import scan_folder
 from parser import extract_module
 from mover import move_file
 from config import DOWNLOADS_PATH
+from discord_reporter import send_summary
 
 
 detected_files = []
@@ -291,6 +292,45 @@ def get_selected_files():
 
     return selected_files
 
+def send_manual_report(moved_files):
+    """
+    Send manual execution report
+    to Discord.
+
+    Args:
+        moved_files (list):
+            Successfully moved files.
+    """
+
+    report = (
+        "📁 Manual File Sorting Report\n\n"
+    )
+
+    report += (
+        f"Files moved: {len(moved_files)}\n\n"
+    )
+
+    for file in moved_files:
+
+        report += (
+            f"✓ {file}\n"
+        )
+
+    report += (
+        "\nStatus: Success ✅"
+    )
+
+    try:
+
+        send_summary(
+            report
+        )
+
+    except Exception as error:
+
+        print(
+            f"Discord error: {error}"
+        )
 
 def execute_sorting():
     """
@@ -302,18 +342,15 @@ def execute_sorting():
         text="Sorting..."
     )
 
-
     try:
 
         selected_files = (
             get_selected_files()
         )
 
-
         total_files = len(
             selected_files
         )
-
 
         if total_files == 0:
 
@@ -323,11 +360,11 @@ def execute_sorting():
 
             return
 
-
         progress["maximum"] = (
             total_files
         )
 
+        moved_files = []
 
         for index, file in enumerate(
                 selected_files
@@ -337,23 +374,23 @@ def execute_sorting():
                 file.name
             )
 
-
             move_file(
                 file,
                 module
             )
 
+            moved_files.append(
+                file.name
+            )
 
             files_listbox.insert(
                 tk.END,
                 f"✓ {file.name}"
             )
 
-
             progress["value"] = (
                 index + 1
             )
-
 
             percentage = int(
                 ((index + 1)
@@ -361,41 +398,41 @@ def execute_sorting():
                 * 100
             )
 
-
             update_status(
                 f"Progress: {percentage}%"
             )
 
-
         update_status(
             f"✓ Finished ({total_files} files moved)"
         )
+
+        send_manual_report(
+            moved_files
+        )
+
         for widget in scrollable_frame.winfo_children():
 
             widget.destroy()
 
+        detected_files.clear()
 
-            detected_files.clear()
+        update_statistics()
 
-            update_statistics()
+        canvas.config(
+            height=30
+        )
 
-            canvas.config(
-                height=30
-            )
+        scrollbar.pack_forget()
 
-            scrollbar.pack_forget()
-
-            execute_button.config(
-                state="disabled"
-            )
-
+        execute_button.config(
+            state="disabled"
+        )
 
     except Exception as error:
 
         update_status(
             f"❌ {error}"
         )
-
 
     finally:
 
