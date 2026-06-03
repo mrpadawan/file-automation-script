@@ -7,6 +7,12 @@ Coordinates:
 - File movement
 - Logging
 - Error handling
+
+Note:
+    This module serves as the
+    application's entry point and
+    coordinates all core workflow
+    components.
 """
 
 
@@ -18,6 +24,19 @@ from config import DOWNLOADS_PATH
 from logger import logger
 
 def process_file(file):
+    """
+    Process a single file.
+
+    Extracts the module name,
+    moves the file to its target
+    location and writes log
+    entries for successful or
+    failed operations.
+
+    Args:
+        file (Path):
+            File to process.
+    """
 
     try:
 
@@ -57,6 +76,14 @@ def process_file(file):
 
 
 def process_all_files():
+    """
+    Process all files found in the
+    configured downloads folder.
+
+    Scans the folder for files and
+    processes each file
+    individually.
+    """
 
     files = scan_folder(
         DOWNLOADS_PATH
@@ -76,6 +103,15 @@ def process_all_files():
 
 
 def main():
+
+    """
+    Start the application.
+
+    Initializes the workflow,
+    processes all detected files
+    and handles critical
+    application errors.
+    """
 
     logger.info(
         "Application started"

@@ -1,3 +1,13 @@
+"""
+File movement functionality.
+
+Responsibilities:
+- Determine destination folders
+- Determine file subfolders
+- Generate duplicate-safe names
+- Move files to their destination
+"""
+
 from pathlib import Path
 import shutil
 

@@ -3,6 +3,19 @@ Scheduled automation runner.
 
 Runs automatically from
 Windows Task Scheduler.
+
+Responsibilities:
+- Scan files automatically
+- Sort detected files
+- Generate execution reports
+- Send Discord notifications
+
+Note:
+    This module is executed by
+    Windows Task Scheduler and
+    performs the same file sorting
+    workflow as the manual process
+    without user interaction.
 """
 
 from datetime import datetime
@@ -14,7 +27,7 @@ from mover import move_file
 from config import DOWNLOADS_PATH
 
 from discord_reporter import (
-    send_summary
+    send_daily_report
 )
 
 
@@ -23,7 +36,21 @@ def build_report(
         failed_files
 ):
     """
-    Create Discord report.
+    Create a Discord report for
+    the automated execution.
+
+    Args:
+        moved_files (list):
+            Successfully processed
+            file names.
+
+        failed_files (list):
+            File names that could
+            not be processed.
+
+    Returns:
+        str:
+            Formatted Discord report.
     """
 
     report = (
@@ -67,14 +94,32 @@ def build_report(
             )
 
 
-    report += (
-        "\nStatus: Success ✅"
-    )
+    if len(failed_files) == 0:
+
+        report += (
+            "\nStatus: Success ✅"
+        )
+
+    else:
+
+        report += (
+            "\nStatus: Completed with Errors ⚠️"
+        )
 
     return report
 
 
 def main():
+    """
+    Execute the automated file
+    sorting workflow.
+
+    Scans the configured folder,
+    processes all detected files,
+    creates an execution report
+    and sends the report to
+    Discord.
+    """
 
     files = scan_folder(
         DOWNLOADS_PATH
@@ -115,7 +160,7 @@ def main():
     )
 
 
-    send_summary(
+    send_daily_report(
         report
     )
 

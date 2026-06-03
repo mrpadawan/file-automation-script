@@ -3,6 +3,13 @@ Application logging configuration.
 
 Creates application log files
 and provides centralized logging.
+
+Note:
+    This module initializes the
+    logging system once and exposes
+    a shared logger instance that
+    can be used throughout the
+    application.
 """
 
 import logging

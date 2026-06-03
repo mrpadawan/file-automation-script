@@ -1,3 +1,11 @@
+"""
+Module parsing functionality.
+
+Responsibilities:
+- Detect module identifiers
+- Extract module numbers from filenames
+"""
+
 import re
 
 

@@ -20,20 +20,23 @@ load_dotenv()
 
 
 """
-Load module configuration
-from JSON file.
-
-Returns:
-    dict:
-        Loaded configuration
+Load configuration values from
+environment variables and the
+module mapping JSON file.
 """
 
 DOWNLOADS_PATH = os.getenv("DOWNLOADS_PATH")
 LOG_PATH = os.getenv("LOG_PATH")
 DEFAULT_UNKNOWN_PATH = os.getenv("DEFAULT_UNKNOWN_PATH")
 MAPPING_FILE = os.getenv("MAPPING_FILE")
-DISCORD_WEBHOOK_URL = os.getenv(
-    "DISCORD_WEBHOOK_URL"
+MANUAL_DISCORD_WEBHOOK_URL = os.getenv(
+    "MANUAL_DISCORD_WEBHOOK_URL"
+)
+DAILY_DISCORD_WEBHOOK_URL = os.getenv(
+    "DAILY_DISCORD_WEBHOOK_URL"
+)
+WEEKLY_DISCORD_WEBHOOK_URL = os.getenv(
+    "WEEKLY_DISCORD_WEBHOOK_URL"
 )
 
 if not DOWNLOADS_PATH:
