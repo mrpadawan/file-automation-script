@@ -1,11 +1,21 @@
 {
     "modules": {
-        "M122":"./tests/test_output/M122",
-        "M123":"./tests/test_output/M123"
+        "M114":"C:/GIBZ/Informatik/M114",
+        "M117":"C:/GIBZ/Informatik/M117E",
+        "M122":"C:/GIBZ/Informatik/M122E",
+        "M162":"C:/GIBZ/Informatik/M162E",
+        "M164":"C:/GIBZ/Informatik/M164E",
+        "M231":"C:/GIBZ/Informatik/M231",
+        "M293":"C:/GIBZ/Informatik/M293",
+        "M319":"C:/GIBZ/Informatik/M319E",
+        "M320":"C:/GIBZ/Informatik/M320",
+        "M431":"C:/GIBZ/Informatik/M431"
     },
 
     "subfolders": {
         "exercise": "Exercises",
+        "executables": "Executables",
+        "archives": "Archives",
         "theory": "Theory",
         "code": "Code"
     }

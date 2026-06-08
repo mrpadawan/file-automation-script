@@ -52,17 +52,64 @@ def determine_subfolder(
         Path:
             Destination subfolder.
     """
+    archives_extensions = [
+        ".zip",
+        ".7z",
+        ".rar",
+        ".tar",
+        ".gz",
+        ".tgz",
+        ".bz2",
+        ".tbz",
+        ".tbz2",
+        ".xz",
+        ".txz",
+        ".lz",
+        ".lzma",
+        ".z",
+        ".cab",
+        ".iso",
+        ".dmg",
+        ".arj",
+        ".ace",
+        ".cpio",
+        ".wim",
+        ".swm",
+        ".apk",   
+        ".ipa",  
+        ".war",   
+        ".ear"   
+    ]
+
+    executables_extensions = [
+        ".exe",
+        ".bat",
+        ".cmd",
+        ".msi",
+        ".ps1",
+        ".scr",
+        ".com",
+        ".jar"
+    ]
 
     exercise_extensions = [
         ".docx",
         ".doc",
+        ".odt",
         ".xlsx",
-        ".pptx"
+        ".xls",
+        ".ods",
+        ".pptx",
+        ".ppt",
+        ".odp",
+        ".rtf"
     ]
 
     theory_extensions = [
         ".pdf",
-        ".txt"
+        ".md",
+        ".txt",
+        ".epub"
     ]
 
     code_extensions = [
@@ -70,9 +117,26 @@ def determine_subfolder(
         ".cs",
         ".java",
         ".js",
+        ".ts",
         ".html",
         ".css",
-        ".cpp"
+        ".cpp",
+        ".c",
+        ".h",
+        ".hpp",
+        ".sql",
+        ".php",
+        ".go",
+        ".rs",
+        ".kt",
+        ".swift",
+        ".sh",
+        ".ps1",
+        ".vb",
+        ".json",
+        ".xml",
+        ".yaml",
+        ".yml"
     ]
 
     if extension in exercise_extensions:
@@ -81,21 +145,28 @@ def determine_subfolder(
             destination_folder /
             SUBFOLDER_MAPPING["exercise"]
         )
-
+    elif extension in archives_extensions:
+        return (
+            destination_folder / 
+            SUBFOLDER_MAPPING["archives"]
+        )
+    elif extension in executables_extensions:
+        return (
+            destination_folder / 
+            SUBFOLDER_MAPPING["executables"]
+        )
     elif extension in theory_extensions:
 
         return (
             destination_folder /
             SUBFOLDER_MAPPING["theory"]
         )
-
     elif extension in code_extensions:
 
         return (
             destination_folder /
             SUBFOLDER_MAPPING["code"]
         )
-
     return destination_folder
 
 

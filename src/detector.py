@@ -1,5 +1,14 @@
 from pathlib import Path
 
+# Operating system metadata files.
+# These values are hardcoded because they
+# are application-level technical exclusions
+# and not user-configurable business data.
+IGNORED_FILES = [
+    "desktop.ini",
+    "thumbs.db",
+    ".ds_store"
+]
 
 def folder_exists(folder_path):
     """
@@ -40,9 +49,12 @@ def get_files(folder_path):
 
     for item in folder.iterdir():
 
-        if item.is_file():
+        if not item.is_file():
+            continue
+        if item.name.lower() in IGNORED_FILES:
+            continue
 
-            files.append(item)
+        files.append(item)
 
     return files
 
