@@ -43,6 +43,17 @@ class TestFileDetector(unittest.TestCase):
             self.assertNotIn(ignored_folder, detected_files)
             self.assertEqual(1, len(detected_files))
 
+    def test_empty_input_folder(self):
+        """
+        Verify that an existing but empty input folder returns an empty list
+        without raising an exception.
+        """
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            detected_files = scan_folder(Path(temporary_directory))
+
+            self.assertEqual([], detected_files)
+
 
 if __name__ == "__main__":
     unittest.main()

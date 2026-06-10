@@ -124,6 +124,20 @@ class TestFileMover(unittest.TestCase):
         self.assertEqual("Exercises", destination_file.parent.name)
         self.assertTrue((self.output_folder / "M114").exists())
 
+    def test_unknown_module_uses_fallback_destination(self):
+        """
+        Verify that files with modules missing from the mapping are moved into
+        the configured fallback destination.
+        """
+
+        source_file = self.input_folder / "M999_Notes.pdf"
+        source_file.write_text("unknown module", encoding="utf-8")
+
+        destination_file = self.mover.move_file(source_file, "M999")
+
+        self.assertFalse(source_file.exists())
+        self.assertTrue(destination_file.exists())
+        self.assertEqual(self.output_folder / "unknown" / "Theory", destination_file.parent)
 
 if __name__ == "__main__":
     unittest.main()

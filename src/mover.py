@@ -14,6 +14,8 @@ import shutil
 from config import MODULE_MAPPING
 from config import DEFAULT_UNKNOWN_PATH
 from config import SUBFOLDER_MAPPING
+from mover_categories import get_subfolder_key
+from mover_filename import generate_filename
 
 
 def determine_destination(module):
@@ -52,163 +54,17 @@ def determine_subfolder(
         Path:
             Destination subfolder.
     """
-    archives_extensions = [
-        ".zip",
-        ".7z",
-        ".rar",
-        ".tar",
-        ".gz",
-        ".tgz",
-        ".bz2",
-        ".tbz",
-        ".tbz2",
-        ".xz",
-        ".txz",
-        ".lz",
-        ".lzma",
-        ".z",
-        ".cab",
-        ".iso",
-        ".dmg",
-        ".arj",
-        ".ace",
-        ".cpio",
-        ".wim",
-        ".swm",
-        ".apk",   
-        ".ipa",  
-        ".war",   
-        ".ear"   
-    ]
+    subfolder_key = get_subfolder_key(
+        extension
+    )
 
-    executables_extensions = [
-        ".exe",
-        ".bat",
-        ".cmd",
-        ".msi",
-        ".ps1",
-        ".scr",
-        ".com",
-        ".jar"
-    ]
-
-    exercise_extensions = [
-        ".docx",
-        ".doc",
-        ".odt",
-        ".xlsx",
-        ".xls",
-        ".ods",
-        ".pptx",
-        ".ppt",
-        ".odp",
-        ".rtf"
-    ]
-
-    theory_extensions = [
-        ".pdf",
-        ".md",
-        ".txt",
-        ".epub"
-    ]
-
-    code_extensions = [
-        ".py",
-        ".cs",
-        ".java",
-        ".js",
-        ".ts",
-        ".html",
-        ".css",
-        ".cpp",
-        ".c",
-        ".h",
-        ".hpp",
-        ".sql",
-        ".php",
-        ".go",
-        ".rs",
-        ".kt",
-        ".swift",
-        ".sh",
-        ".ps1",
-        ".vb",
-        ".json",
-        ".xml",
-        ".yaml",
-        ".yml"
-    ]
-
-    if extension in exercise_extensions:
-
+    if subfolder_key:
         return (
             destination_folder /
-            SUBFOLDER_MAPPING["exercise"]
+            SUBFOLDER_MAPPING[subfolder_key]
         )
-    elif extension in archives_extensions:
-        return (
-            destination_folder / 
-            SUBFOLDER_MAPPING["archives"]
-        )
-    elif extension in executables_extensions:
-        return (
-            destination_folder / 
-            SUBFOLDER_MAPPING["executables"]
-        )
-    elif extension in theory_extensions:
 
-        return (
-            destination_folder /
-            SUBFOLDER_MAPPING["theory"]
-        )
-    elif extension in code_extensions:
-
-        return (
-            destination_folder /
-            SUBFOLDER_MAPPING["code"]
-        )
     return destination_folder
-
-
-def generate_filename(
-        destination_file,
-        file_path
-):
-    """
-    Generate duplicate-safe filename.
-
-    Args:
-        destination_file (Path):
-            Target file path.
-
-        file_path (Path):
-            Source file path.
-
-    Returns:
-        Path:
-            Safe file path.
-    """
-
-    counter = 2
-
-    while destination_file.exists():
-
-        filename = file_path.stem
-
-        extension = file_path.suffix
-
-        new_name = (
-            f"{filename}_V{counter}{extension}"
-        )
-
-        destination_file = (
-            destination_file.parent /
-            new_name
-        )
-
-        counter += 1
-
-    return destination_file
 
 
 def move_file(

@@ -55,7 +55,7 @@ project-root/
 │   ├── grading/
 │   ├── requirements/
 │   └── testing/
-│       ├── screenshots/
+│       ├── debugging.md
 │       ├── test_cases.md
 │       └── test_protocol.md
 ├── src/
@@ -180,7 +180,7 @@ The project includes a professional testing structure based on Python `unittest`
 Run all tests:
 
 ```bash
-python -m unittest discover tests
+.venv\Scripts\python.exe -m unittest discover tests
 ```
 
 Testing assets and documentation are organized as follows:
@@ -192,6 +192,9 @@ tests/
 │   ├── invalid/
 │   ├── duplicates/
 │   └── empty/
+│   ├── debugging.md
+│   ├── test_cases.md
+│   ├── test_protocol.md
 ├── test_detector.py
 ├── test_parser.py
 ├── test_mover.py
@@ -199,7 +202,7 @@ tests/
 └── test_discord.py
 
 docs/testing/
-├── screenshots/
+├── debugging.md
 ├── test_cases.md
 └── test_protocol.md
 ```

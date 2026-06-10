@@ -18,95 +18,54 @@ Note:
     without user interaction.
 """
 
-from datetime import datetime
-
 from detector import scan_folder
 from parser import extract_module
 from mover import move_file
-
 from config import DOWNLOADS_PATH
-
-from discord_reporter import (
-    send_daily_report
-)
+from scheduler_report import build_report
+from discord_reporter import send_daily_report
 
 
-def build_report(
-        moved_files,
-        failed_files
-):
+def process_scheduled_files(files):
     """
-    Create a Discord report for
-    the automated execution.
+    Process files for scheduled
+    automation.
 
     Args:
-        moved_files (list):
-            Successfully processed
-            file names.
-
-        failed_files (list):
-            File names that could
-            not be processed.
+        files (list):
+            Files detected in the
+            configured input folder.
 
     Returns:
-        str:
-            Formatted Discord report.
+        tuple:
+            Moved file names and
+            failed file names.
     """
 
-    report = (
-        "📁 Daily File Automation Report\n\n"
-    )
+    moved_files = []
+    failed_files = []
 
-    report += (
-        f"Date: {datetime.now().strftime('%d.%m.%Y %H:%M')}\n\n"
-    )
-
-    report += (
-        f"Files moved: {len(moved_files)}\n"
-    )
-
-    report += (
-        f"Errors: {len(failed_files)}\n\n"
-    )
-
-
-    if moved_files:
-
-        report += "Moved Files:\n"
-
-        for file in moved_files:
-
-            report += (
-                f"✓ {file}\n"
+    for file in files:
+        try:
+            module = extract_module(
+                file.name
             )
 
-
-    if failed_files:
-
-        report += (
-            "\nFailed Files:\n"
-        )
-
-        for file in failed_files:
-
-            report += (
-                f"❌ {file}\n"
+            move_file(
+                file,
+                module
             )
 
+            moved_files.append(
+                file.name
+            )
 
-    if len(failed_files) == 0:
+        except Exception:
+            failed_files.append(
+                file.name
+            )
 
-        report += (
-            "\nStatus: Success ✅"
-        )
-
-    else:
-
-        report += (
-            "\nStatus: Completed with Errors ⚠️"
-        )
-
-    return report
+    return moved_files, failed_files
 
 
 def main():
@@ -125,40 +84,14 @@ def main():
         DOWNLOADS_PATH
     )
 
-    moved_files = []
-
-    failed_files = []
-
-
-    for file in files:
-
-        try:
-
-            module = extract_module(
-                file.name
-            )
-
-            move_file(
-                file,
-                module
-            )
-
-            moved_files.append(
-                file.name
-            )
-
-        except Exception:
-
-            failed_files.append(
-                file.name
-            )
-
+    moved_files, failed_files = process_scheduled_files(
+        files
+    )
 
     report = build_report(
         moved_files,
         failed_files
     )
-
 
     send_daily_report(
         report
@@ -166,5 +99,4 @@ def main():
 
 
 if __name__ == "__main__":
-
     main()

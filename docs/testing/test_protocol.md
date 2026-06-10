@@ -1,16 +1,18 @@
 # M122 File Organizer - Test Protocol
 
-Test execution reference: `python -m unittest discover tests`  
-Execution result: `Ran 12 tests in 1.270s - OK`
+Test execution reference: `.venv\Scripts\python.exe -m unittest discover tests`  
+Execution result: `Ran 15 tests - OK`
 
-## Screenshots
+## Evidence Files
 
-| Screenshot | Purpose |
+| Evidence | Purpose |
 |---|---|
-| [01-test-run-success.png](screenshots/01-test-run-success.png) | Shows the successful automated unit test execution. |
-| [02-test-cases-overview.png](screenshots/02-test-cases-overview.png) | Summarizes the documented test case coverage. |
-| [03-test-protocol-filled.png](screenshots/03-test-protocol-filled.png) | Shows the filled test protocol summary. |
-| [04-testing-folder-structure.png](screenshots/04-testing-folder-structure.png) | Shows the implemented testing folder structure. |
+| `tests/test_detector.py` | Automated tests for file detection, ignored folders, and empty input folders. |
+| `tests/test_parser.py` | Automated tests for valid and invalid module extraction. |
+| `tests/test_mover.py` | Automated tests for moving, folder creation, duplicate handling, and fallback routing. |
+| `tests/test_gui.py` | Automated tests for GUI selection logic. |
+| `tests/test_discord.py` | Automated tests for manual, daily, and weekly Discord report routing with mocked network calls. |
+| `docs/testing/debugging.md` | Debugging evidence, breakpoints, watched variables, and white-box/black-box explanation. |
 
 | Test ID | Date | Tester | Expected Result | Actual Result | Status | Notes |
 |---|---|---|---|---|---|---|
@@ -26,6 +28,6 @@ Execution result: `Ran 12 tests in 1.270s - OK`
 | TC-010 | 2026-06-07 | Nikola | Manual report is sent to the configured manual Discord webhook. | Manual report delegated to the configured manual webhook endpoint. | PASS | Covered by `test_manual_report`; webhook call was mocked. |
 | TC-011 | 2026-06-07 | Nikola | Daily report is sent to the configured daily Discord webhook. | Daily report delegated to the configured daily webhook endpoint. | PASS | Covered by `test_daily_report`; webhook call was mocked. |
 | TC-012 | 2026-06-07 | Nikola | Weekly report is sent to the configured weekly Discord webhook. | Weekly report delegated to the configured weekly webhook endpoint. | PASS | Covered by `test_weekly_report`; webhook call was mocked. |
-| TC-013 | 2026-06-07 | Nikola | Empty input folder returns no files and does not cause an application error. | Not executed in the current automated test run. | NOT RUN | Documented test case; recommended for future automated coverage. |
-| TC-014 | 2026-06-07 | Nikola | Unknown module files are routed to the configured fallback destination. | Not executed in the current automated test run. | NOT RUN | Documented test case; recommended for future automated coverage. |
-| TC-015 | 2026-06-07 | Nikola | Large file set is processed accurately without data loss. | Not executed in the current automated test run. | NOT RUN | Documented test case; recommended for future performance/regression testing. |
+| TC-013 | 2026-06-10 | Nikola | Empty input folder returns no files and does not cause an application error. | Empty input folder returned an empty list without raising an exception. | PASS | Covered by `test_empty_input_folder`. |
+| TC-014 | 2026-06-10 | Nikola | Unknown module files are routed to the configured fallback destination. | Unknown module file was moved to the configured fallback destination. | PASS | Covered by `test_unknown_module_uses_fallback_destination`. |
+| TC-015 | 2026-06-10 | Nikola | Large file set is processed accurately without data loss. | Mixed file batch processed successfully; duplicates, known modules, unknown modules, code files, and theory files were moved without data loss. | PASS | Covered by `test_large_mixed_file_set`. |

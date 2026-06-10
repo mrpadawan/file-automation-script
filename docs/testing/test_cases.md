@@ -17,3 +17,30 @@
 | TC-013 | Empty Input Folder | Verify that an empty input folder is handled gracefully. | The configured input folder exists and contains no files. | 1. Start the file detection process.<br>2. Scan the input folder.<br>3. Review the application status. | No files are returned, no exception occurs, and the user receives an appropriate status message where applicable. |
 | TC-014 | Unknown Module | Verify that an unknown module identifier is routed to the configured fallback destination. | The input folder contains a file such as `M999_Notes.pdf`, and `M999` is not configured in the module mapping. | 1. Extract the module identifier.<br>2. Execute the move operation.<br>3. Inspect the fallback destination. | The file is moved to the configured unknown-module destination without disrupting other files. |
 | TC-015 | Large File Set | Verify that the application can process a large number of files reliably. | The input folder contains a large dataset of valid, invalid, duplicate, and unknown-module files. | 1. Scan the input folder.<br>2. Select all detected files.<br>3. Execute the organization process.<br>4. Review output folders, progress behavior, and logs. | The application processes the file set accurately, handles duplicates correctly, and completes without data loss. |
+
+## Testing Methodology
+
+The test set combines white-box and black-box testing.
+
+White-box tests check internal code paths and branches:
+
+| Code Path | Covered By |
+|---|---|
+| Folder iteration ignores nested folders and returns files only. | `test_file_detection` |
+| Empty folder loop returns an empty result. | `test_empty_input_folder` |
+| Parser returns a module when the regex matches. | `test_valid_module` |
+| Parser returns `None` when the regex does not match. | `test_invalid_module` |
+| Destination folders are created before moving. | `test_missing_folder_creation` |
+| Duplicate filename loop generates a safe versioned filename. | `test_duplicate_handling` |
+| Unknown module branch uses the fallback destination. | `test_unknown_module_uses_fallback_destination` |
+
+Black-box tests check user-visible behavior:
+
+| User Behavior | Covered By |
+|---|---|
+| Select one file in the GUI. | `test_file_selection` |
+| Select all visible files. | `test_select_all` |
+| Deselect all visible files. | `test_deselect_all` |
+| Send manual, daily, and weekly reports. | `test_manual_report`, `test_daily_report`, `test_weekly_report` |
+
+The executed automated suite covers normal cases, missing values, invalid values, duplicate files, fallback routing, mixed batch processing, and GUI/reporting behavior.
