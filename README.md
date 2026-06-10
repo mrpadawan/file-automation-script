@@ -1,239 +1,549 @@
 # M122 File Organizer
 
-## Overview
+A configurable Python application that organizes downloaded school files into
+the correct module and file-type folders.
 
-M122 File Organizer is a Python automation project for organizing downloaded school files. The application scans a configured input folder, extracts module identifiers from filenames such as `M122` or `M114`, and moves files into the correct module folders.
+> New user? Start with [INSTRUCTIONS.md](INSTRUCTIONS.md) for the complete
+> installation guide after downloading or extracting the ZIP file.
 
-The project demonstrates practical process automation with a modular Python architecture, configuration management, logging, duplicate handling, a Tkinter GUI, Discord webhook reporting, and Windows Task Scheduler integration.
+## Documentation Guide
 
-## Features
+- [Introduction and Context](#1-introduction-and-context)
+- [Main Features](#2-main-features)
+- [How the Application Works](#3-how-the-application-works)
+- [Requirements](#4-requirements)
+- [Quick Start](#5-quick-start)
+- [Configuration](#6-configuration)
+- [Running the Project](#7-running-the-project)
+- [Testing and Verification](#9-testing-and-verification)
+- [Troubleshooting](#10-troubleshooting)
+- [Architecture and Design](#12-architecture-and-design)
+- [Development Process](#13-development-process)
 
-* Automatic file detection from a configured input folder
-* Module identifier extraction from filenames
-* Configurable module-to-folder mapping
-* Extension-based subfolder categorization
-* Automatic creation of missing destination folders
-* Duplicate filename handling with `_V2`, `_V3`, and later suffixes
-* Tkinter graphical user interface
-* File selection with checkboxes
-* Select All and Deselect All controls
-* Scrollable file list
-* Progress bar and status messages
-* Structured logging
-* Discord webhook reports
-* Manual, daily, and weekly reporting support
-* Windows Task Scheduler integration
-* Executable build support with PyInstaller
-* Unit test structure and professional testing documentation
+## 1. Introduction and Context
 
-## Technologies
+School files downloaded from Microsoft Teams, GitLab, browsers, and other
+platforms normally arrive in one Downloads folder. Assignments, theory
+documents, source code, archives, and installers then have to be moved manually
+into folders such as `M122`, `M114`, or `M293`. Repeating this task every day
+takes time and can lead to misplaced files, forgotten documents, and accidental
+overwrites.
 
-* Python 3
-* Tkinter
-* pathlib and shutil
-* Python logging
-* Environment variables
-* JSON configuration
-* python-dotenv
-* discord-webhook
-* Windows Task Scheduler
-* unittest
-* PyInstaller
+The M122 File Organizer automates that local workflow. It scans a configured
+folder, finds a module identifier such as `M122` in each filename, resolves the
+configured destination, selects a category based on the file extension, and
+moves the file safely.
 
-## Project Structure
+The project began as the **Automated Download Organizer for School** described
+in the project proposal. The original goal was a command-line script for file
+detection, module parsing, folder mapping, file movement, duplicate handling,
+and logging. During development, the scope was extended with a Tkinter GUI,
+selective processing, progress feedback, Discord reports, scheduled runners,
+and automated tests.
 
-```txt
-project-root/
-├── assets/
-│   └── icon.ico
-├── config/
-│   └── module_mapping.json
-├── docs/
-│   ├── design/
-│   │   ├── architecture/
-│   │   └── diagrams/
-│   ├── grading/
-│   ├── requirements/
-│   └── testing/
-│       ├── debugging.md
-│       ├── test_cases.md
-│       └── test_protocol.md
-├── src/
-│   ├── config.py
-│   ├── detector.py
-│   ├── discord_reporter.py
-│   ├── gui.py
-│   ├── gui_discord.py
-│   ├── gui_file_operations.py
-│   ├── gui_helpers.py
-│   ├── gui_selection.py
-│   ├── gui_state.py
-│   ├── logger.py
-│   ├── main.py
-│   ├── mover.py
-│   ├── parser.py
-│   ├── scheduler_runner.py
-│   └── weekly_report_runner.py
-├── tests/
-│   ├── test_files/
-│   │   ├── duplicates/
-│   │   ├── empty/
-│   │   ├── invalid/
-│   │   └── valid/
-│   ├── test_detector.py
-│   ├── test_discord.py
-│   ├── test_gui.py
-│   ├── test_mover.py
-│   └── test_parser.py
-├── .env.example
-├── .gitignore
-├── README.md
-└── requirements.txt
+### Purpose
+
+The application is intended to:
+
+- reduce repetitive manual sorting;
+- keep school module folders consistent;
+- prevent existing files from being overwritten;
+- make paths and module mappings configurable;
+- provide a traceable workflow through logs and reports;
+- remain easy to extend when new modules or file types are added.
+
+### Scope
+
+The current version supports local Windows file organization. A user can run it
+through the GUI, from the command line, or with Windows Task Scheduler.
+
+The application does **not** continuously watch the folder in real time. Each
+manual or scheduled execution performs one scan and processes the files that
+are present at that moment. It also does not provide cloud synchronization or
+multi-user access.
+
+## 2. Main Features
+
+- Scans a configurable input folder.
+- Detects module codes using the filename pattern `M<number>`.
+- Maps known modules to destinations in `config/module_mapping.json`.
+- Routes unknown or missing module codes to a configurable fallback folder.
+- Sorts files into `Exercises`, `Theory`, `Code`, `Archives`, or `Executables`.
+- Creates missing destination and category folders automatically.
+- Protects existing files with `_V2`, `_V3`, and later version suffixes.
+- Provides a Tkinter GUI with checkboxes and file selection controls.
+- Shows detected/selected counts, progress, status, and processed files.
+- Writes application events to `logs/application.log`.
+- Supports optional manual, daily, and weekly Discord webhook reports.
+- Includes entry points for Windows Task Scheduler.
+- Includes 15 automated unit tests.
+
+## 3. How the Application Works
+
+The implementation follows the activity and component diagrams in
+`docs/design/diagrams`.
+
+1. The application loads `.env`.
+2. `src/config.py` validates the required paths and loads the JSON mapping.
+3. `src/detector.py` scans the configured input folder.
+4. `src/parser.py` searches each filename for an `M<number>` identifier.
+5. `src/mover.py` resolves the module or fallback destination.
+6. The file extension determines its category subfolder.
+7. Missing folders are created.
+8. Duplicate names receive the next available version suffix.
+9. The file is moved and the result is shown or logged.
+10. When configured, a Discord summary is sent.
+
+### Example
+
+Given this file:
+
+```text
+M122_ProjectDocumentation.pdf
 ```
 
-## Configuration
+and this module mapping:
 
-The application uses environment variables and a JSON mapping file.
+```json
+"M122": "C:/GIBZ/Informatik/M122E"
+```
 
-Example `.env` configuration:
+the result is:
+
+```text
+C:/GIBZ/Informatik/M122E/Theory/M122_ProjectDocumentation.pdf
+```
+
+If that filename already exists, the new file becomes:
+
+```text
+M122_ProjectDocumentation_V2.pdf
+```
+
+## 4. Requirements
+
+### Supported Environment
+
+- Windows 10 or Windows 11
+- Python 3.10 or newer
+- `pip`
+- Tkinter, normally included with the standard Windows Python installer
+- Internet access only for dependency installation and optional Discord reports
+
+The project was most recently verified with Python `3.14.4`.
+
+### Python Dependencies
+
+All third-party dependencies and their pinned versions are listed in
+`requirements.txt`. The main runtime packages are:
+
+- `python-dotenv` for `.env` configuration;
+- `discord-webhook` and `requests` for optional Discord reports;
+- `pyinstaller` and related packages for executable builds.
+
+Python standard-library modules such as `tkinter`, `pathlib`, `shutil`,
+`logging`, `json`, `re`, and `unittest` are also used.
+
+## 5. Quick Start
+
+The full beginner-friendly procedure is in [INSTRUCTIONS.md](INSTRUCTIONS.md).
+The short version is:
+
+```powershell
+py -m venv .venv
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+Copy-Item .env.example .env
+New-Item -ItemType Directory -Path .\input -Force
+python .\src\gui.py
+```
+
+Before launching, edit `.env` and `config/module_mapping.json` as explained
+below. The included mapping contains example paths from the developer's school
+computer and must be adapted on another computer.
+
+## 6. Configuration
+
+Configuration is intentionally kept outside the source code. This makes the
+same application usable with different Windows accounts and folder structures.
+
+### `.env`
+
+Create `.env` by copying `.env.example`:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Example for testing entirely inside the project folder:
 
 ```env
 DOWNLOADS_PATH=./input
 LOG_PATH=./logs
 DEFAULT_UNKNOWN_PATH=./output/unknown
 MAPPING_FILE=./config/module_mapping.json
-MANUAL_DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
-DAILY_DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
-WEEKLY_DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
+
+MANUAL_DISCORD_WEBHOOK_URL=
+DAILY_DISCORD_WEBHOOK_URL=
+WEEKLY_DISCORD_WEBHOOK_URL=
 ```
 
-Example `config/module_mapping.json`:
+Example using the real Windows Downloads folder:
+
+```env
+DOWNLOADS_PATH=C:/Users/YourName/Downloads
+LOG_PATH=./logs
+DEFAULT_UNKNOWN_PATH=C:/Users/YourName/Documents/School/Unknown
+MAPPING_FILE=./config/module_mapping.json
+```
+
+Use forward slashes in Windows paths. Do not add quotation marks unless the
+path value itself requires them.
+
+| Variable | Required | Purpose |
+|---|---:|---|
+| `DOWNLOADS_PATH` | Yes | Folder scanned for files. It must already exist. |
+| `LOG_PATH` | Yes | Folder in which `application.log` is created. |
+| `DEFAULT_UNKNOWN_PATH` | Yes | Destination for unconfigured or missing module codes. |
+| `MAPPING_FILE` | Yes | Location of the module mapping JSON file. |
+| `MANUAL_DISCORD_WEBHOOK_URL` | No | Report sent after a GUI sorting run. |
+| `DAILY_DISCORD_WEBHOOK_URL` | No | Report sent by the daily scheduled runner. |
+| `WEEKLY_DISCORD_WEBHOOK_URL` | No | Report sent by the weekly report runner. |
+
+The `.env` file may contain private webhook URLs and is excluded by
+`.gitignore`. Do not publish real webhook URLs.
+
+### `config/module_mapping.json`
+
+This file connects module codes to destination folders and category keys to
+folder names:
 
 ```json
 {
     "modules": {
-        "M122": "./output/M122",
-        "M123": "./output/M123",
-        "M114": "./output/M114"
+        "M122": "C:/Users/YourName/Documents/School/M122",
+        "M114": "C:/Users/YourName/Documents/School/M114"
     },
     "subfolders": {
         "exercise": "Exercises",
+        "executables": "Executables",
+        "archives": "Archives",
         "theory": "Theory",
         "code": "Code"
     }
 }
 ```
 
-## Installation
+Important rules:
 
-Clone the repository and install the required dependencies:
+- Keep the JSON braces, commas, and quotation marks valid.
+- Add one entry for each module that should have its own destination.
+- Use forward slashes in Windows paths.
+- Destination folders do not need to exist; the program creates them.
+- A module absent from this file uses `DEFAULT_UNKNOWN_PATH`.
 
-```bash
-git clone <repository-url>
-cd file-automation-script
-pip install -r requirements.txt
+### Filename Convention
+
+The parser searches for an uppercase `M` followed by digits anywhere in the
+filename:
+
+```text
+M122_Project.pdf
+LB02_M114_Exercise.docx
+Notes_M293.txt
 ```
 
-Create a local `.env` file from `.env.example` and adjust the paths and webhook URLs for your environment.
+These filenames produce `M122`, `M114`, and `M293`. A filename such as
+`Homework.pdf` has no module match and is sent to the fallback destination.
+Lowercase `m122` is not recognized by the current parser.
 
-## Usage
+### File Categories
 
-Run the main automation:
+| Category folder | Common extensions |
+|---|---|
+| `Exercises` | `.docx`, `.xlsx`, `.pptx`, `.odt`, `.rtf` |
+| `Theory` | `.pdf`, `.md`, `.txt`, `.epub` |
+| `Code` | `.py`, `.java`, `.js`, `.html`, `.css`, `.sql`, `.json`, `.xml` |
+| `Archives` | `.zip`, `.7z`, `.rar`, `.tar`, `.gz`, `.iso` |
+| `Executables` | `.exe`, `.bat`, `.cmd`, `.msi`, `.ps1`, `.jar` |
 
-```bash
-python src/main.py
+An extension without a defined category is moved directly into the module's
+base destination.
+
+## 7. Running the Project
+
+Run commands from the project root, where `README.md` and `requirements.txt`
+are located.
+
+### Graphical Interface
+
+```powershell
+.\.venv\Scripts\python.exe .\src\gui.py
 ```
 
-Run the graphical interface:
+GUI workflow:
 
-```bash
-python src/gui.py
+1. Click **Scan Files**.
+2. Review the detected files.
+3. Use the checkboxes, **Select All**, or **Deselect All**.
+4. Click **Execute Sorting**.
+5. Review the progress bar, status, and processed-file list.
+6. Check the configured destinations and `logs/application.log`.
+
+Files are moved, not copied. Test with `DOWNLOADS_PATH=./input` before pointing
+the application at a real Downloads folder.
+
+### Command-Line Workflow
+
+```powershell
+.\.venv\Scripts\python.exe .\src\main.py
 ```
 
-The GUI supports file scanning, checkbox-based file selection, Select All and Deselect All actions, progress updates, status messages, and a processing summary.
+This scans once and processes every file in the configured input folder.
 
-## Discord Reporting
+### Daily Scheduled Workflow
 
-Discord webhook reporting is handled through `src/discord_reporter.py` and the configured webhook URLs.
-
-Supported report types:
-
-* Manual reports
-* Daily reports
-* Weekly reports
-
-## Scheduled Automation
-
-The project supports automated execution through Windows Task Scheduler.
-
-Typical scheduled workflows:
-
-* Daily file organization and reporting
-* Weekly file organization and reporting
-
-The scheduler runner scans the configured input folder, organizes files, records processing information, and can send Discord reports based on the configured workflow.
-
-## Testing
-
-The project includes a professional testing structure based on Python `unittest`.
-
-Run all tests:
-
-```bash
-.venv\Scripts\python.exe -m unittest discover tests
+```powershell
+.\.venv\Scripts\python.exe .\src\scheduler_runner.py
 ```
 
-Testing assets and documentation are organized as follows:
+This processes all detected files and attempts to send a daily Discord report.
+A valid `DAILY_DISCORD_WEBHOOK_URL` is needed for report delivery.
 
-```txt
-tests/
-├── test_files/
-│   ├── valid/
-│   ├── invalid/
-│   ├── duplicates/
-│   └── empty/
-│   ├── debugging.md
-│   ├── test_cases.md
-│   ├── test_protocol.md
-├── test_detector.py
-├── test_parser.py
-├── test_mover.py
-├── test_gui.py
-└── test_discord.py
+### Weekly Report
 
-docs/testing/
-├── debugging.md
-├── test_cases.md
-└── test_protocol.md
+```powershell
+.\.venv\Scripts\python.exe .\src\weekly_report_runner.py
 ```
 
-## Build Executable
+This sends the weekly status message through the configured weekly webhook.
 
-Build the GUI as a Windows executable:
+## 8. Optional Windows Task Scheduler Setup
 
-```bash
+1. Open **Task Scheduler**.
+2. Choose **Create Basic Task**.
+3. Select a daily or weekly trigger.
+4. Choose **Start a program**.
+5. In **Program/script**, enter the full path to:
+
+   ```text
+   <project>\.venv\Scripts\python.exe
+   ```
+
+6. In **Add arguments**, enter:
+
+   ```text
+   <project>\src\scheduler_runner.py
+   ```
+
+7. In **Start in**, enter the project root:
+
+   ```text
+   <project>
+   ```
+
+For a weekly report task, use `src\weekly_report_runner.py` as the argument.
+Using **Start in** is important because the default configuration contains
+project-relative paths.
+
+## 9. Testing and Verification
+
+Run the complete test suite:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover tests
+```
+
+Current verified result:
+
+```text
+Ran 15 tests
+OK
+```
+
+The tests cover:
+
+- file detection and empty input folders;
+- valid and invalid module extraction;
+- correct movement and automatic folder creation;
+- duplicate-safe filenames;
+- fallback routing for unknown modules;
+- mixed batch processing without data loss;
+- GUI selection, Select All, and Deselect All;
+- manual, daily, and weekly report routing with mocked network calls.
+
+Detailed test cases, test evidence, and debugging notes are available in
+`docs/testing`.
+
+## 10. Troubleshooting
+
+### `Python was not found`
+
+Install Python from [python.org](https://www.python.org/downloads/windows/) and
+enable **Add Python to PATH**, then reopen PowerShell.
+
+### PowerShell blocks `Activate.ps1`
+
+Use a temporary policy change for the current terminal:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\.venv\Scripts\Activate.ps1
+```
+
+Activation is optional. All documented commands can instead use
+`.\.venv\Scripts\python.exe` directly.
+
+### `DOWNLOADS_PATH missing in .env`
+
+Create `.env` from `.env.example`, keep it in the project root, and fill in all
+four required path variables.
+
+### `Folder does not exist`
+
+Create the folder configured by `DOWNLOADS_PATH`, or correct the path:
+
+```powershell
+New-Item -ItemType Directory -Path .\input -Force
+```
+
+### `Mapping file not found`
+
+Confirm that `.env` contains:
+
+```env
+MAPPING_FILE=./config/module_mapping.json
+```
+
+### Files go to unexpected folders
+
+Check:
+
+- that the filename contains an uppercase code such as `M122`;
+- that the module exists in `config/module_mapping.json`;
+- that the JSON destination path belongs to the current computer;
+- that the extension category matches the table above.
+
+### Discord report fails
+
+Sorting remains local even when Discord reporting fails. Confirm that the
+correct webhook variable contains a complete Discord webhook URL and that the
+computer has internet access. Leave webhook values empty if Discord reporting
+is not required.
+
+### Tkinter is unavailable
+
+Reinstall Python using the official Windows installer and ensure the optional
+**tcl/tk and IDLE** component is selected.
+
+## 11. Project Structure
+
+```text
+file-automation-script/
+|-- assets/                     Application icon
+|-- config/
+|   `-- module_mapping.json     Module and category destinations
+|-- docs/
+|   |-- design/                 UML diagrams and architecture documents
+|   |-- grading/                Project grading sheet
+|   |-- requirements/           Original project proposal
+|   `-- testing/                Test cases, protocol, and debugging evidence
+|-- src/
+|   |-- main.py                 Command-line entry point
+|   |-- gui.py                  Graphical entry point
+|   |-- config.py               Environment and JSON configuration
+|   |-- detector.py             Input-folder scanning
+|   |-- parser.py               Module extraction
+|   |-- mover.py                Destination and movement workflow
+|   |-- mover_categories.py     Extension categories
+|   |-- mover_filename.py       Duplicate-safe naming
+|   |-- logger.py               File logging
+|   |-- discord_reporter.py     Discord webhook delivery
+|   |-- scheduler_runner.py     Daily scheduled workflow
+|   `-- weekly_report_runner.py Weekly report workflow
+|-- tests/                      Automated unit tests and fixtures
+|-- .env.example                Configuration template
+|-- INSTRUCTIONS.md             ZIP installation and user guide
+|-- README.md                   Project documentation
+`-- requirements.txt            Pinned Python dependencies
+```
+
+The `input`, `output`, and `logs` folders are runtime folders and may be created
+locally as needed.
+
+## 12. Architecture and Design
+
+The project uses small modules with focused responsibilities:
+
+- **Configuration layer:** loads environment variables and JSON mappings.
+- **Detection layer:** reads direct child files from the input folder.
+- **Parsing layer:** extracts module identifiers with a regular expression.
+- **Movement layer:** resolves destinations, categories, and duplicate names.
+- **Presentation layer:** provides the Tkinter user interface.
+- **Reporting layer:** writes logs and optionally sends Discord summaries.
+- **Automation layer:** exposes daily and weekly scheduler entry points.
+
+This structure follows separation of concerns and makes individual components
+easier to test and maintain. The component and activity diagrams are located at:
+
+- `docs/design/diagrams/component_diagram.drawio.png`
+- `docs/design/diagrams/activity_diagram.drawio.png`
+
+### Component Diagram
+
+The component diagram shows how the Python modules, configuration files,
+filesystem destinations, logs, and optional Discord reporting interact.
+
+![Automated Download Organizer component diagram](docs/design/diagrams/component_diagram.drawio.png)
+
+### Activity Diagram
+
+The activity diagram follows the complete decision flow from configuration and
+file detection through parsing, folder creation, duplicate handling, movement,
+logging, and reporting.
+
+![Automated Download Organizer activity diagram](docs/design/diagrams/activity_diagram.drawio.png)
+
+## 13. Development Process
+
+The work was organized in project-board phases that mirror the proposal:
+
+- **Design:** folder architecture, parsing, error handling, logging, component
+  diagram, and activity diagram.
+- **Development:** project setup, monitoring, parsing, mapping, moving,
+  configuration, logging, duplicates, reporting, GUI, and refactoring.
+- **Testing:** detector, parser, movement, missing folders, duplicates, GUI
+  selection, reporting, empty input, unknown modules, and mixed batches.
+
+This progression provides traceability from the initial problem and MoSCoW
+requirements to the implemented modules and their automated tests.
+
+## 14. Build an Executable
+
+With the virtual environment active:
+
+```powershell
 pyinstaller --onefile --windowed --icon=assets/icon.ico --name="M122 File Organizer" src/gui.py
 ```
 
-The executable is created in the `dist/` folder.
+The executable is created in `dist`. The `.env` file and
+`config/module_mapping.json` are external configuration files and must remain
+available to the application unless they are explicitly bundled through a
+custom PyInstaller specification.
 
-## Documentation
+## 15. Data Safety
 
-Project documentation includes:
-
-* Requirements documentation
-* Architecture documentation
-* UML diagrams
-* File detection workflow
-* Parsing logic
-* Logging architecture
-* Error handling strategy
-* Test cases
-* Test protocol
+- Files are moved from the source folder; they are not copied.
+- Existing destination files are not overwritten.
+- Test first with the local `input` folder.
+- Keep a backup when evaluating with important documents.
+- Review module paths before selecting **Execute Sorting**.
+- Keep Discord webhook URLs private.
 
 ## Author
 
-Nikola
-
+Nikola  
 GIBZ Informatik  
 Module 122 - Automating Processes with a Scripting Language
