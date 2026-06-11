@@ -98,7 +98,7 @@ def execute_sorting(state):
 
             state.files_listbox.insert(
                 tk.END,
-                f"âœ“ {file.name}"
+                f"✓ {file.name}"
             )
 
             state.progress["value"] = (
@@ -118,7 +118,7 @@ def execute_sorting(state):
 
         update_status(
             state,
-            f"âœ“ Finished ({total_files} files moved)"
+            f"✅ Finished ({total_files} files moved)"
         )
 
         send_manual_report(
@@ -133,7 +133,7 @@ def execute_sorting(state):
 
         update_status(
             state,
-            f"âŒ {error}"
+            f"❌ {error}"
         )
 
     finally:
