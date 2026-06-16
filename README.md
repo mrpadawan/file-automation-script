@@ -4,7 +4,7 @@ Version: **1.2.0**
 
 License: **MIT**
 
-Latest Release: **v1.0.0**
+Latest Release: **v1.1.0**
 
 A configurable Python application that organizes downloaded school files into
 the correct module and file-type folders.
