@@ -30,9 +30,9 @@ takes time and can lead to misplaced files, forgotten documents, and accidental
 overwrites.
 
 The M122 File Organizer automates that local workflow. It scans a configured
-folder, finds a module identifier such as `M122` in each filename, resolves the
-configured destination, selects a category based on the file extension, and
-moves the file safely.
+folder, finds a module identifier such as `M122` in each file or folder name,
+resolves the configured destination, selects a category for files based on the
+file extension, and moves the item safely.
 
 The project began as the **Automated Download Organizer for School** described
 in the project proposal. The original goal was a command-line script for file
@@ -64,11 +64,13 @@ multi-user access.
 
 ## 2. Main Features
 
-- Scans a configurable input folder.
-- Detects module codes using the filename pattern `M<number>`.
+- Version 1.1.0.
+- Scans a configurable input folder for files and direct child folders.
+- Detects module codes using the name pattern `M<number>` or `M<number>E`.
 - Maps known modules to destinations in `config/module_mapping.json`.
 - Routes unknown or missing module codes to a configurable fallback folder.
 - Sorts files into `Exercises`, `Theory`, `Code`, `Archives`, or `Executables`.
+- Moves folders as complete units into the module root folder.
 - Creates missing destination and category folders automatically.
 - Protects existing files with `_V2`, `_V3`, and later version suffixes.
 - Provides a Tkinter GUI with checkboxes and file selection controls.
@@ -76,7 +78,7 @@ multi-user access.
 - Writes application events to `logs/application.log`.
 - Supports optional manual, daily, and weekly Discord webhook reports.
 - Includes entry points for Windows Task Scheduler.
-- Includes 15 automated unit tests.
+- Includes 20 automated unit tests.
 
 ## 3. How the Application Works
 
@@ -86,12 +88,12 @@ The implementation follows the activity and component diagrams in
 1. The application loads `.env`.
 2. `src/config.py` validates the required paths and loads the JSON mapping.
 3. `src/detector.py` scans the configured input folder.
-4. `src/parser.py` searches each filename for an `M<number>` identifier.
+4. `src/parser.py` searches each item name for an `M<number>` identifier.
 5. `src/mover.py` resolves the module or fallback destination.
-6. The file extension determines its category subfolder.
+6. Files use their extension to determine a category subfolder.
 7. Missing folders are created.
 8. Duplicate names receive the next available version suffix.
-9. The file is moved and the result is shown or logged.
+9. The file or folder is moved and the result is shown or logged.
 10. When configured, a Discord summary is sent.
 
 ### Example
@@ -119,6 +121,10 @@ If that filename already exists, the new file becomes:
 ```text
 M122_ProjectDocumentation_V2.pdf
 ```
+
+Folders are moved as complete units. For example, `M122E_ProjectFolder` is moved
+directly into the configured `M122` module destination, and its contents stay
+inside the folder.
 
 ## 4. Requirements
 
@@ -244,18 +250,19 @@ Important rules:
 - Destination folders do not need to exist; the program creates them.
 - A module absent from this file uses `DEFAULT_UNKNOWN_PATH`.
 
-### Filename Convention
+### Name Convention
 
 The parser searches for an uppercase `M` followed by digits anywhere in the
-filename:
+file or folder name. A trailing `E` suffix is also accepted:
 
 ```text
 M122_Project.pdf
 LB02_M114_Exercise.docx
 Notes_M293.txt
+M122E_ProjectFolder
 ```
 
-These filenames produce `M122`, `M114`, and `M293`. A filename such as
+These names produce `M122`, `M114`, `M293`, and `M122E`. A name such as
 `Homework.pdf` has no module match and is sent to the fallback destination.
 Lowercase `m122` is not recognized by the current parser.
 
@@ -359,16 +366,17 @@ Run the complete test suite:
 Current verified result:
 
 ```text
-Ran 15 tests
+Ran 20 tests
 OK
 ```
 
 The tests cover:
 
-- file detection and empty input folders;
+- file and folder detection and empty input folders;
 - valid and invalid module extraction;
 - correct movement and automatic folder creation;
-- duplicate-safe filenames;
+- duplicate-safe file and folder names;
+- folder movement with preserved contents;
 - fallback routing for unknown modules;
 - mixed batch processing without data loss;
 - GUI selection, Select All, and Deselect All;
@@ -421,7 +429,7 @@ MAPPING_FILE=./config/module_mapping.json
 
 Check:
 
-- that the filename contains an uppercase code such as `M122`;
+- that the file or folder name contains an uppercase code such as `M122`;
 - that the module exists in `config/module_mapping.json`;
 - that the JSON destination path belongs to the current computer;
 - that the extension category matches the table above.
@@ -478,7 +486,7 @@ locally as needed.
 The project uses small modules with focused responsibilities:
 
 - **Configuration layer:** loads environment variables and JSON mappings.
-- **Detection layer:** reads direct child files from the input folder.
+- **Detection layer:** reads direct child files and folders from the input folder.
 - **Parsing layer:** extracts module identifiers with a regular expression.
 - **Movement layer:** resolves destinations, categories, and duplicate names.
 - **Presentation layer:** provides the Tkinter user interface.

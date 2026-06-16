@@ -139,5 +139,63 @@ class TestFileMover(unittest.TestCase):
         self.assertTrue(destination_file.exists())
         self.assertEqual(self.output_folder / "unknown" / "Theory", destination_file.parent)
 
+    def test_folder_move_preserves_contents(self):
+        """
+        Verify that a folder is moved directly into the module root folder and
+        keeps its existing contents.
+        """
+
+        source_folder = self.input_folder / "M122E_ProjectFolder"
+        nested_file = source_folder / "notes.txt"
+        source_folder.mkdir()
+        nested_file.write_text("folder content", encoding="utf-8")
+
+        destination_folder = self.mover.move_file(source_folder, "M122E")
+
+        self.assertFalse(source_folder.exists())
+        self.assertTrue(destination_folder.exists())
+        self.assertEqual(self.output_folder / "M122", destination_folder.parent)
+        self.assertEqual(
+            "folder content",
+            (destination_folder / "notes.txt").read_text(encoding="utf-8")
+        )
+
+    def test_duplicate_folder_handling(self):
+        """
+        Verify that moving a folder with an existing target folder creates a
+        versioned folder name instead of overwriting the existing folder.
+        """
+
+        target_folder = self.output_folder / "M122" / "M122_Project"
+        target_folder.mkdir(parents=True)
+        (target_folder / "old.txt").write_text("old", encoding="utf-8")
+
+        source_folder = self.input_folder / "M122_Project"
+        source_folder.mkdir()
+        (source_folder / "new.txt").write_text("new", encoding="utf-8")
+
+        destination_folder = self.mover.move_file(source_folder, "M122")
+
+        self.assertEqual("M122_Project_V2", destination_folder.name)
+        self.assertEqual("old", (target_folder / "old.txt").read_text(encoding="utf-8"))
+        self.assertEqual("new", (destination_folder / "new.txt").read_text(encoding="utf-8"))
+
+    def test_unknown_folder_uses_fallback_destination(self):
+        """
+        Verify that folders without a configured module are moved into the
+        fallback destination.
+        """
+
+        source_folder = self.input_folder / "ProjectFolder"
+        source_folder.mkdir()
+        (source_folder / "notes.txt").write_text("unknown", encoding="utf-8")
+
+        destination_folder = self.mover.move_file(source_folder, None)
+
+        self.assertFalse(source_folder.exists())
+        self.assertTrue(destination_folder.exists())
+        self.assertEqual(self.output_folder / "unknown", destination_folder.parent)
+        self.assertTrue((destination_folder / "notes.txt").exists())
+
 if __name__ == "__main__":
     unittest.main()

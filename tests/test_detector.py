@@ -19,8 +19,8 @@ from detector import scan_folder
 
 class TestFileDetector(unittest.TestCase):
     """
-    Validates that the detector module identifies files from a configured
-    input directory without returning nested folders as processable files.
+    Validates that the detector module identifies processable files and
+    folders from a configured input directory.
     """
 
     def test_file_detection(self):
@@ -32,16 +32,35 @@ class TestFileDetector(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary_directory:
             input_folder = Path(temporary_directory)
             expected_file = input_folder / "M122_TestDocument.pdf"
-            ignored_folder = input_folder / "nested"
+            expected_folder = input_folder / "M122_ProjectFolder"
 
             expected_file.write_text("test content", encoding="utf-8")
-            ignored_folder.mkdir()
+            expected_folder.mkdir()
 
             detected_files = scan_folder(input_folder)
 
             self.assertIn(expected_file, detected_files)
-            self.assertNotIn(ignored_folder, detected_files)
-            self.assertEqual(1, len(detected_files))
+            self.assertIn(expected_folder, detected_files)
+            self.assertEqual(2, len(detected_files))
+
+    def test_technical_folder_ignored(self):
+        """
+        Verify that clearly technical folders are not returned as processable
+        user folders.
+        """
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            input_folder = Path(temporary_directory)
+            technical_folder = input_folder / "__pycache__"
+            user_folder = input_folder / "M122_ProjectFolder"
+
+            technical_folder.mkdir()
+            user_folder.mkdir()
+
+            detected_items = scan_folder(input_folder)
+
+            self.assertIn(user_folder, detected_items)
+            self.assertNotIn(technical_folder, detected_items)
 
     def test_empty_input_folder(self):
         """

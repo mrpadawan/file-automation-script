@@ -2,8 +2,8 @@
 Duplicate-safe filename generation.
 
 Responsibilities:
-- Generate versioned filenames
-- Prevent file overwrites
+- Generate versioned item names
+- Prevent file and folder overwrites
 """
 
 
@@ -12,14 +12,14 @@ def generate_filename(
         file_path
 ):
     """
-    Generate duplicate-safe filename.
+    Generate duplicate-safe item name.
 
     Args:
         destination_file (Path):
-            Target file path.
+            Target file or folder path.
 
         file_path (Path):
-            Source file path.
+            Source file or folder path.
 
     Returns:
         Path:
@@ -30,13 +30,19 @@ def generate_filename(
 
     while destination_file.exists():
 
-        filename = file_path.stem
+        if file_path.is_dir():
+            new_name = (
+                f"{file_path.name}_V{counter}"
+            )
 
-        extension = file_path.suffix
+        else:
+            filename = file_path.stem
 
-        new_name = (
-            f"{filename}_V{counter}{extension}"
-        )
+            extension = file_path.suffix
+
+            new_name = (
+                f"{filename}_V{counter}{extension}"
+            )
 
         destination_file = (
             destination_file.parent /

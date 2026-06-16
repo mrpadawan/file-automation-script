@@ -73,6 +73,12 @@ def create_checkboxes(
             value=True
         )
 
+        item_type = (
+            "Folder"
+            if file.is_dir()
+            else "File"
+        )
+
         variable.trace_add(
             "write",
             lambda *args:
@@ -84,7 +90,7 @@ def create_checkboxes(
 
         checkbox = tk.Checkbutton(
             state.scrollable_frame,
-            text=file.name,
+            text=f"[{item_type}] {file.name}",
             variable=variable,
             bg="#f5f5f5",
             font=("Arial", 10),

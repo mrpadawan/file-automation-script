@@ -3,8 +3,8 @@ File detection functionality.
 
 Responsibilities:
 - Check input folders
-- Return processable files
-- Ignore operating system metadata files
+- Return processable files and folders
+- Ignore operating system metadata items
 """
 
 from pathlib import Path
@@ -17,6 +17,14 @@ IGNORED_FILES = [
     "desktop.ini",
     "thumbs.db",
     ".ds_store"
+]
+
+IGNORED_FOLDERS = [
+    ".git",
+    ".venv",
+    "venv",
+    "__pycache__",
+    ".pytest_cache"
 ]
 
 
@@ -41,7 +49,8 @@ def folder_exists(folder_path):
 
 def get_files(folder_path):
     """
-    Retrieve all files from a folder.
+    Retrieve all processable items
+    from a folder.
 
     Args:
         folder_path (str):
@@ -49,30 +58,34 @@ def get_files(folder_path):
 
     Returns:
         list:
-            List containing all
-            detected file objects.
+            List containing detected
+            file and folder objects.
     """
 
     folder = Path(folder_path)
 
-    files = []
+    items = []
 
     for item in folder.iterdir():
 
-        if not item.is_file():
-            continue
-        if item.name.lower() in IGNORED_FILES:
+        item_name = item.name.lower()
+
+        if item.is_file() and item_name in IGNORED_FILES:
             continue
 
-        files.append(item)
+        if item.is_dir() and item_name in IGNORED_FOLDERS:
+            continue
 
-    return files
+        if item.is_file() or item.is_dir():
+            items.append(item)
+
+    return items
 
 
 def scan_folder(folder_path):
     """
     Scan a folder and return all
-    detected files.
+    detected files and folders.
 
     Args:
         folder_path (str):
@@ -80,7 +93,8 @@ def scan_folder(folder_path):
 
     Returns:
         list:
-            List of detected files.
+            List of detected files
+            and folders.
 
     Raises:
         FileNotFoundError:

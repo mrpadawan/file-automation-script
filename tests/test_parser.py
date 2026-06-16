@@ -32,6 +32,16 @@ class TestModuleParser(unittest.TestCase):
 
         self.assertEqual("M122", module)
 
+    def test_folder_module_with_suffix(self):
+        """
+        Verify that folder names with a module suffix still produce the full
+        module identifier.
+        """
+
+        module = extract_module("M122E_ProjectFolder")
+
+        self.assertEqual("M122E", module)
+
     def test_invalid_module(self):
         """
         Verify that a filename without a valid module identifier returns None

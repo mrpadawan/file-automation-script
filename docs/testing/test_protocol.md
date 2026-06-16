@@ -1,22 +1,22 @@
 # M122 File Organizer - Test Protocol
 
 Test execution reference: `.venv\Scripts\python.exe -m unittest discover tests`  
-Execution result: `Ran 15 tests - OK`
+Execution result: `Ran 20 tests - OK`
 
 ## Evidence Files
 
 | Evidence | Purpose |
 |---|---|
-| `tests/test_detector.py` | Automated tests for file detection, ignored folders, and empty input folders. |
-| `tests/test_parser.py` | Automated tests for valid and invalid module extraction. |
-| `tests/test_mover.py` | Automated tests for moving, folder creation, duplicate handling, and fallback routing. |
+| `tests/test_detector.py` | Automated tests for file and folder detection, ignored folders, and empty input folders. |
+| `tests/test_parser.py` | Automated tests for valid, suffixed, and invalid module extraction. |
+| `tests/test_mover.py` | Automated tests for moving files and folders, folder creation, duplicate handling, and fallback routing. |
 | `tests/test_gui.py` | Automated tests for GUI selection logic. |
 | `tests/test_discord.py` | Automated tests for manual, daily, and weekly Discord report routing with mocked network calls. |
 | `docs/testing/debugging.md` | Debugging evidence, breakpoints, watched variables, and white-box/black-box explanation. |
 
 | Test ID | Date | Tester | Expected Result | Actual Result | Status | Notes |
 |---|---|---|---|---|---|---|
-| TC-001 | 2026-06-07 | Nikola | Files in the input folder are detected, and folders are ignored. | File detection test passed successfully. | PASS | Covered by `test_file_detection`. |
+| TC-001 | 2026-06-07 | Nikola | Files and user folders in the input folder are detected, while technical folders are ignored. | File and folder detection test passed successfully. | PASS | Covered by `test_file_detection` and `test_technical_folder_ignored`. |
 | TC-002 | 2026-06-07 | Nikola | Parser returns `M122` for a valid module filename. | Valid module extraction returned the expected module identifier. | PASS | Covered by `test_valid_module`. |
 | TC-003 | 2026-06-07 | Nikola | Parser returns `None` for a filename without a valid module identifier. | Invalid module extraction returned `None`. | PASS | Covered by `test_invalid_module`. |
 | TC-004 | 2026-06-07 | Nikola | File is moved to the configured module destination. | File was moved successfully into the expected module/category folder. | PASS | Covered by `test_file_move`. |
@@ -31,3 +31,6 @@ Execution result: `Ran 15 tests - OK`
 | TC-013 | 2026-06-10 | Nikola | Empty input folder returns no files and does not cause an application error. | Empty input folder returned an empty list without raising an exception. | PASS | Covered by `test_empty_input_folder`. |
 | TC-014 | 2026-06-10 | Nikola | Unknown module files are routed to the configured fallback destination. | Unknown module file was moved to the configured fallback destination. | PASS | Covered by `test_unknown_module_uses_fallback_destination`. |
 | TC-015 | 2026-06-10 | Nikola | Large file set is processed accurately without data loss. | Mixed file batch processed successfully; duplicates, known modules, unknown modules, code files, and theory files were moved without data loss. | PASS | Covered by `test_large_mixed_file_set`. |
+| TC-016 | 2026-06-16 | Nikola | User folders appear as processable items. | Folder detection returned the direct child folder. | PASS | Covered by `test_file_detection`. |
+| TC-017 | 2026-06-16 | Nikola | Folders move to the module root and keep contents. | Folder was moved into the module destination root with its contents preserved. | PASS | Covered by `test_folder_move_preserves_contents`. |
+| TC-018 | 2026-06-16 | Nikola | Duplicate folders are renamed without overwriting existing folders. | Duplicate folder was renamed with `_V2`, and the existing folder stayed unchanged. | PASS | Covered by `test_duplicate_folder_handling`. |

@@ -3,7 +3,8 @@ Module parsing functionality.
 
 Responsibilities:
 - Detect module identifiers
-- Extract module numbers from filenames
+- Extract module numbers from file
+  and folder names
 """
 
 import re
@@ -14,7 +15,8 @@ def find_module(filename):
     Search for a module identifier.
 
     Args:
-        filename (str): Name of the file.
+        filename (str):
+            Name of the file or folder.
 
     Returns:
         Match | None:
@@ -22,7 +24,7 @@ def find_module(filename):
     """
 
     return re.search(
-        r"M\d+",
+        r"M\d+E?",
         filename
     )
 
@@ -32,7 +34,8 @@ def extract_module(filename):
     Extract the module identifier.
 
     Args:
-        filename (str): Name of file.
+        filename (str):
+            Name of file or folder.
 
     Returns:
         str | None:

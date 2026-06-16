@@ -9,8 +9,8 @@ program flow follows the intended logic.
 
 | Area | File | Breakpoint Purpose | Variables Watched |
 |---|---|---|---|
-| Folder scan loop | `src/detector.py` | Pause inside the `for item in folder.iterdir()` loop to confirm only files are collected and folders/system files are skipped. | `item`, `item.is_file()`, `files` |
-| Module parsing | `src/parser.py` | Pause after the regex search to confirm valid filenames return a module and invalid filenames return `None`. | `filename`, `match`, `match.group()` |
+| Folder scan loop | `src/detector.py` | Pause inside the `for item in folder.iterdir()` loop to confirm files and user folders are collected while system items are skipped. | `item`, `item.is_file()`, `item.is_dir()`, `items` |
+| Module parsing | `src/parser.py` | Pause after the regex search to confirm valid file and folder names return a module and invalid names return `None`. | `filename`, `match`, `match.group()` |
 | Destination selection | `src/mover.py` | Pause in `determine_destination()` to verify known modules use mapped folders and unknown modules use the fallback path. | `module`, `MODULE_MAPPING`, `DEFAULT_UNKNOWN_PATH` |
 | Subfolder selection | `src/mover.py` | Step through extension checks to verify PDFs go to Theory, documents go to Exercises, and code files go to Code. | `extension`, `destination_folder`, `SUBFOLDER_MAPPING` |
 | Duplicate handling loop | `src/mover.py` | Pause inside the `while destination_file.exists()` loop to verify `_V2`, `_V3`, and later filenames are generated without overwriting existing files. | `counter`, `destination_file`, `new_name` |
@@ -26,7 +26,7 @@ program flow follows the intended logic.
 
 ## White-Box and Black-Box Testing
 
-White-box testing was used for internal program paths where the code structure is known. Examples include the detector loop, parser branch for valid and invalid module names, duplicate filename loop, and fallback destination branch.
+White-box testing was used for internal program paths where the code structure is known. Examples include the detector loop, parser branch for valid and invalid module names, duplicate name loop, and fallback destination branch.
 
 Black-box testing was used from the user's point of view. Examples include selecting files in the GUI, clicking Select All or Deselect All, and confirming that reports are sent through the correct report action.
 
@@ -34,7 +34,7 @@ Black-box testing was used from the user's point of view. Examples include selec
 
 | Issue Found | Debugging Observation | Fix or Confirmation |
 |---|---|---|
-| Duplicate files could overwrite previous files if the version loop failed. | The debugger showed `destination_file.exists()` stayed true until a free versioned name was found. | Confirmed by `test_duplicate_handling`. |
+| Duplicate files or folders could overwrite previous items if the version loop failed. | The debugger showed `destination_file.exists()` stayed true until a free versioned name was found. | Confirmed by `test_duplicate_handling` and `test_duplicate_folder_handling`. |
 | Empty folders needed to be handled without crashing. | Stepping through `scan_folder()` showed the loop completes with no items and returns an empty list. | Confirmed by `test_empty_input_folder`. |
 | Unknown modules needed to avoid normal module folders. | Watching `determine_destination()` showed missing mapping keys return `DEFAULT_UNKNOWN_PATH`. | Confirmed by `test_unknown_module_uses_fallback_destination`. |
 | Discord tests should not send real network requests. | Debugging confirmed report functions delegate to `_send_message()`. | Confirmed with mocked `_send_message()` in `test_discord.py`. |
@@ -50,6 +50,6 @@ The final automated test run was executed from the project virtual environment:
 Expected result:
 
 ```txt
-Ran 15 tests
+Ran 20 tests
 OK
 ```

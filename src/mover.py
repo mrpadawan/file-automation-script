@@ -5,7 +5,7 @@ Responsibilities:
 - Determine destination folders
 - Determine file subfolders
 - Generate duplicate-safe names
-- Move files to their destination
+- Move files and folders to their destination
 """
 
 from pathlib import Path
@@ -29,6 +29,15 @@ def determine_destination(module):
         str:
             Destination folder path.
     """
+
+    if module in MODULE_MAPPING:
+        return MODULE_MAPPING[module]
+
+    if module and module.endswith("E"):
+        module_without_suffix = module[:-1]
+
+        if module_without_suffix in MODULE_MAPPING:
+            return MODULE_MAPPING[module_without_suffix]
 
     return MODULE_MAPPING.get(
         module,
@@ -72,11 +81,12 @@ def move_file(
         module
 ):
     """
-    Move a file to its destination.
+    Move a file or folder to its
+    destination.
 
     Args:
         file_path (Path):
-            File to move.
+            File or folder to move.
 
         module (str):
             Extracted module identifier.
@@ -94,16 +104,20 @@ def move_file(
         destination
     )
 
-    extension = (
-        file_path.suffix.lower()
-    )
+    file_path = Path(file_path)
 
-    destination_folder = (
-        determine_subfolder(
-            extension,
-            destination_folder
+    if file_path.is_file():
+
+        extension = (
+            file_path.suffix.lower()
         )
-    )
+
+        destination_folder = (
+            determine_subfolder(
+                extension,
+                destination_folder
+            )
+        )
 
     destination_folder.mkdir(
         parents=True,
