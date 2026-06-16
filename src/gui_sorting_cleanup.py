@@ -7,37 +7,58 @@ Responsibilities:
 - Restore sorting controls
 """
 
-from gui_helpers import update_statistics
+from gui_helpers import (
+    update_checkbox_area,
+    update_statistics
+)
 from gui_checkbox_files import get_selected_files
 
 
-def clear_sorted_files(state):
+def clear_sorted_files(state, sorted_files):
     """
-    Clear the checkbox area after
-    sorting has completed.
+    Remove sorted files from the
+    checkbox area after sorting has
+    completed.
 
     Args:
         state (GUIState):
             Shared GUI state.
+
+        sorted_files (list):
+            Files that were moved.
     """
 
-    for widget in state.scrollable_frame.winfo_children():
+    sorted_file_set = set(
+        sorted_files
+    )
 
-        widget.destroy()
+    remaining_files = []
 
-    state.detected_files.clear()
+    for widget in list(
+            state.scrollable_frame.winfo_children()
+    ):
+
+        if widget.file in sorted_file_set:
+
+            widget.destroy()
+
+        else:
+
+            remaining_files.append(
+                widget.file
+            )
+
+    state.detected_files = remaining_files
 
     update_statistics(
         state,
         get_selected_files
     )
 
-    state.canvas.config(
-        height=30
-    )
+    update_checkbox_area(state)
 
-    state.scrollbar.pack_forget()
+    if not state.detected_files:
 
-    state.execute_button.config(
-        state="disabled"
-    )
+        state.execute_button.config(
+            state="disabled"
+        )

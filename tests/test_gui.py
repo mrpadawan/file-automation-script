@@ -15,6 +15,8 @@ if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
 import gui_selection
+import gui_sorting
+import gui_sorting_cleanup
 
 
 class FakeCheckbutton(gui_selection.tk.Checkbutton):
@@ -29,8 +31,16 @@ class FakeCheckbutton(gui_selection.tk.Checkbutton):
         """
 
         self.file = file_name
+        self.destroyed = False
         self.variable = MagicMock()
         self.variable.get.return_value = selected
+
+    def destroy(self):
+        """
+        Record that the checkbox would have been removed from the GUI.
+        """
+
+        self.destroyed = True
 
 
 class TestGUISelection(unittest.TestCase):
@@ -99,6 +109,113 @@ class TestGUISelection(unittest.TestCase):
         self.first_checkbox.variable.set.assert_called_once_with(False)
         self.second_checkbox.variable.set.assert_called_once_with(False)
         mocked_update_statistics.assert_called_once()
+
+    @patch("gui_sorting_cleanup.update_checkbox_area")
+    def test_clear_sorted_files_keeps_unselected_file(self, mocked_update_area):
+        """
+        Verify that cleanup removes only moved files and keeps unchecked files
+        visible for a later sorting run.
+        """
+
+        gui_sorting_cleanup.clear_sorted_files(
+            self.state,
+            [self.first_checkbox.file]
+        )
+
+        self.assertTrue(self.first_checkbox.destroyed)
+        self.assertFalse(self.second_checkbox.destroyed)
+        self.assertEqual(
+            [self.second_checkbox.file],
+            self.state.detected_files
+        )
+        self.state.execute_button.config.assert_not_called()
+        mocked_update_area.assert_called_once_with(self.state)
+
+    @patch("gui_sorting_cleanup.update_checkbox_area")
+    def test_clear_sorted_files_disables_execute_when_empty(
+            self,
+            mocked_update_area
+    ):
+        """
+        Verify that the execute button is disabled when no detected files remain
+        after sorting.
+        """
+
+        gui_sorting_cleanup.clear_sorted_files(
+            self.state,
+            [
+                self.first_checkbox.file,
+                self.second_checkbox.file,
+            ]
+        )
+
+        self.assertEqual(
+            [],
+            self.state.detected_files
+        )
+        self.state.execute_button.config.assert_called_once_with(
+            state="disabled"
+        )
+        mocked_update_area.assert_called_once_with(self.state)
+
+
+class TestGUISorting(unittest.TestCase):
+    """
+    Validates the GUI sorting workflow independently from real Tkinter windows.
+    """
+
+    @patch("gui_sorting.update_status")
+    @patch("gui_sorting.send_manual_report")
+    @patch("gui_sorting.clear_sorted_files")
+    @patch("gui_sorting.move_file")
+    @patch("gui_sorting.extract_module")
+    @patch("gui_sorting.get_selected_files")
+    def test_execute_sorting_shows_destination_path(
+            self,
+            mocked_get_selected_files,
+            mocked_extract_module,
+            mocked_move_file,
+            mocked_clear_sorted_files,
+            mocked_send_manual_report,
+            mocked_update_status
+    ):
+        """
+        Verify that processed output shows where each selected file was moved.
+        """
+
+        selected_file = Path("M122_Report.pdf")
+        destination_file = (
+            PROJECT_ROOT /
+            "output" /
+            "M122" /
+            "Theory" /
+            "M122_Report.pdf"
+        )
+        state = MagicMock()
+        state.detected_files = [selected_file]
+        state.progress = {}
+
+        mocked_get_selected_files.return_value = [
+            selected_file
+        ]
+        mocked_extract_module.return_value = "M122"
+        mocked_move_file.return_value = destination_file
+
+        gui_sorting.execute_sorting(state)
+
+        state.files_listbox.insert.assert_called_once_with(
+            gui_sorting.tk.END,
+            f"Moved: M122_Report.pdf -> {destination_file.resolve()}"
+        )
+        mocked_send_manual_report.assert_called_once_with(
+            [
+                f"M122_Report.pdf -> {destination_file.resolve()}"
+            ]
+        )
+        mocked_clear_sorted_files.assert_called_once_with(
+            state,
+            [selected_file]
+        )
 
 
 if __name__ == "__main__":

@@ -86,18 +86,22 @@ def execute_sorting(state):
                 file.name
             )
 
-            move_file(
+            destination_file = move_file(
                 file,
                 module
             )
 
+            destination_path = (
+                destination_file.resolve()
+            )
+
             moved_files.append(
-                file.name
+                f"{file.name} -> {destination_path}"
             )
 
             state.files_listbox.insert(
                 tk.END,
-                f"Done: {file.name}"
+                f"Moved: {file.name} -> {destination_path}"
             )
 
             state.progress["value"] = (
@@ -125,7 +129,8 @@ def execute_sorting(state):
         )
 
         clear_sorted_files(
-            state
+            state,
+            selected_files
         )
 
     except Exception as error:
@@ -137,7 +142,13 @@ def execute_sorting(state):
 
     finally:
 
+        button_state = (
+            "normal"
+            if state.detected_files
+            else "disabled"
+        )
+
         state.execute_button.config(
-            state="normal",
+            state=button_state,
             text="Execute Sorting"
         )
