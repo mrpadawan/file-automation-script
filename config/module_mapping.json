@@ -1,15 +1,15 @@
 {
     "modules": {
-        "M114":"C:/GIBZ/Informatik/M114",
-        "M117":"C:/GIBZ/Informatik/M117E",
-        "M122":"C:/GIBZ/Informatik/M122E",
-        "M162":"C:/GIBZ/Informatik/M162E",
-        "M164":"C:/GIBZ/Informatik/M164E",
-        "M231":"C:/GIBZ/Informatik/M231",
-        "M293":"C:/GIBZ/Informatik/M293",
-        "M319":"C:/GIBZ/Informatik/M319E",
-        "M320":"C:/GIBZ/Informatik/M320",
-        "M431":"C:/GIBZ/Informatik/M431"
+        "M114": "./output/M114",
+        "M117": "./output/M117",
+        "M122": "./output/M122",
+        "M162": "./output/M162",
+        "M164": "./output/M164",
+        "M231": "./output/M231",
+        "M293": "./output/M293",
+        "M319": "./output/M319",
+        "M320": "./output/M320",
+        "M431": "./output/M431"
     },
 
     "subfolders": {

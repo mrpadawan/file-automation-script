@@ -107,13 +107,13 @@ M122_ProjectDocumentation.pdf
 and this module mapping:
 
 ```json
-"M122": "C:/GIBZ/Informatik/M122E"
+"M122": "./output/M122"
 ```
 
 the result is:
 
 ```text
-C:/GIBZ/Informatik/M122E/Theory/M122_ProjectDocumentation.pdf
+./output/M122/Theory/M122_ProjectDocumentation.pdf
 ```
 
 If that filename already exists, the new file becomes:
