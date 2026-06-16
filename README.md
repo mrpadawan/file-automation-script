@@ -25,6 +25,7 @@ the correct module and file-type folders.
 - [Troubleshooting](#10-troubleshooting)
 - [Architecture and Design](#12-architecture-and-design)
 - [Development Process](#13-development-process)
+- [Screenshot Appendix](#16-screenshot-appendix)
 
 ## 1. Introduction and Context
 
@@ -572,6 +573,96 @@ custom PyInstaller specification.
 - Keep a backup when evaluating with important documents.
 - Review module paths before selecting **Execute Sorting**.
 - Keep Discord webhook URLs private.
+
+## 16. Screenshot Appendix
+
+The screenshots below provide visual evidence for the main user workflows,
+configuration files, testing, scheduling, and executable build.
+
+### GUI Before Scanning
+
+The application opens with no detected files and waits for the user to start a
+scan.
+
+![M122 File Organizer GUI before scanning](docs/screenshots/01-main-window-empty.png)
+
+### Files Detected After Scan
+
+After scanning the configured input folder, the GUI lists all detected items and
+selects them by default.
+
+![M122 File Organizer after detecting files](docs/screenshots/02-input-folder-before-scan.png)
+
+### Sorting Finished
+
+After sorting, the processed-file list and status message show the completed
+movement result.
+
+![M122 File Organizer after sorting files](docs/screenshots/03-gui-after-scan.png)
+
+### Selective Processing
+
+Users can deselect files before sorting so that only selected files are moved.
+
+![M122 File Organizer with one selected file](docs/screenshots/04-gui-selection.png)
+
+### Single Selected File Sorted
+
+When only one file is selected, the GUI reports that only one file was moved.
+
+![M122 File Organizer after sorting one selected file](docs/screenshots/05-gui-after-sorting.png)
+
+### Sorted Output Folder
+
+Files are moved into the configured module and category folder structure.
+
+![Sorted output folder with exercise document](docs/screenshots/06-output-folder-sorted.png)
+
+### Duplicate Handling
+
+If a destination filename already exists, the application keeps both files by
+adding a version suffix to the newer file.
+
+![Duplicate file handling with V2 suffix](docs/screenshots/07-duplicate-handling.png)
+
+### Environment Configuration
+
+Runtime paths and optional Discord webhook URLs are configured through `.env`.
+Private webhook values are blurred in this screenshot.
+
+![Environment configuration with blurred webhook values](docs/screenshots/08-env-example-config-blurred.png)
+
+### Module Mapping
+
+The JSON mapping connects module identifiers to destination folders and defines
+the category folder names.
+
+![Module mapping JSON configuration](docs/screenshots/09-module-mapping-json.png)
+
+### Automated Test Results
+
+The complete automated test suite passes successfully.
+
+![Automated test results in Visual Studio Code](docs/screenshots/10-test-results.png)
+
+### Task Scheduler Setup
+
+The project can be executed automatically through Windows Task Scheduler for
+daily sorting and reporting.
+
+![Windows Task Scheduler configuration](docs/screenshots/12-task-scheduler.png)
+
+### Built Executable
+
+The PyInstaller build creates a Windows executable in the `dist` folder.
+
+![Built Windows executable in dist folder](docs/screenshots/13-14-built-executable.png)
+
+### Discord Reporting Note
+
+A Discord message screenshot is not included because the company network blocks
+the required connection. Discord reporting is still covered by the configuration
+example and the automated tests for manual, daily, and weekly report routing.
 
 ## Author
 
