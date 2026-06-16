@@ -389,7 +389,16 @@ The tests cover:
 - manual, daily, and weekly report routing with mocked network calls.
 
 Detailed test cases, test evidence, and debugging notes are available in
-`docs/testing`.
+`docs/testing`. This folder is the single source for testing documentation:
+
+- `test_cases.md` lists the planned test cases, steps, and expected results.
+- `test_protocol.md` records the executed results and pass/fail status.
+- `debugging.md` documents debugging checks, breakpoints, and test evidence.
+
+The `tests` folder contains the executable unit tests. The `tests/test_input`
+and `tests/test_output` folders are kept as empty placeholder fixture folders
+for manual checks and example input/output structure; the automated tests create
+their own temporary folders when they run.
 
 ## 10. Troubleshooting
 
@@ -477,7 +486,15 @@ file-automation-script/
 |   |-- discord_reporter.py     Discord webhook delivery
 |   |-- scheduler_runner.py     Daily scheduled workflow
 |   `-- weekly_report_runner.py Weekly report workflow
-|-- tests/                      Automated unit tests and fixtures
+|-- tests/                      Automated unit tests
+|   |-- test_detector.py        Detection tests
+|   |-- test_parser.py          Parser tests
+|   |-- test_mover.py           File and folder movement tests
+|   |-- test_mover_batch.py     Mixed batch movement tests
+|   |-- test_gui.py             GUI selection tests
+|   |-- test_discord.py         Discord reporting tests
+|   |-- test_input/             Empty manual-test input placeholder
+|   `-- test_output/            Empty manual-test output placeholder
 |-- .env.example                Configuration template
 |-- INSTRUCTIONS.md             ZIP installation and user guide
 |-- README.md                   Project documentation
