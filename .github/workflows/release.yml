@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and release Windows executable
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate release version
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+
+          if ($tag -notmatch '^v\d+\.\d+\.\d+$') {
+            throw "Release tag must use the format vMAJOR.MINOR.PATCH, for example v1.2.0."
+          }
+
+          $tagVersion = $tag.Substring(1)
+          $fileVersion = (Get-Content VERSION).Trim()
+
+          if ($fileVersion -ne $tagVersion) {
+            throw "Tag version $tagVersion does not match VERSION file value $fileVersion."
+          }
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build executable
+        run: |
+          pyinstaller --onefile --windowed --icon=assets/icon.ico --name="M122 File Organizer" src/gui.py
+
+      - name: Prepare release asset
+        shell: pwsh
+        run: |
+          $assetName = "M122-File-Organizer-${{ github.ref_name }}-windows.exe"
+
+          New-Item -ItemType Directory -Force -Path release | Out-Null
+          Copy-Item "dist/M122 File Organizer.exe" "release/$assetName"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "M122 File Organizer ${{ github.ref_name }}"
+          tag_name: ${{ github.ref_name }}
+          files: release/*.exe
