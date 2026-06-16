@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+- Removed duplicate test documentation.
+- Remove unused test folders.
+- Added MIT LICENSE. (post release)
+
 ## 1.1.0
 
 - Added support for detecting folders in the input folder.
