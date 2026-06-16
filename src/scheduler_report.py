@@ -30,21 +30,21 @@ def build_report(moved_files, failed_files):
     """
 
     report = (
-        "📁Daily File Automation Report\n\n"
+        "Daily File Automation Report\n\n"
         f"Date: {datetime.now().strftime('%d.%m.%Y %H:%M')}\n\n"
         f"Files moved: {len(moved_files)}\n"
         f"Errors: {len(failed_files)}\n\n"
     )
 
     for file in moved_files:
-        report += f"✓ {file}\n"
+        report += f"- {file}\n"
 
     for file in failed_files:
-            report += f"❌ {file}\n"
+        report += f"ERROR: {file}\n"
 
     if len(failed_files) == 0:
-        report += "\nStatus: Success ✅"
+        report += "\nStatus: Success"
     else:
-        report += "\nStatus: Completed with Errors ⚠️"
+        report += "\nStatus: Completed with errors"
 
     return report

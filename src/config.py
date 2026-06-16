@@ -71,7 +71,7 @@ if not mapping_path.exists():
 with open(
         mapping_path,
         "r",
-        encoding="utf-8"
+        encoding="utf-8-sig"
 ) as file:
 
     configuration = json.load(file)

@@ -11,6 +11,7 @@ import tkinter as tk
 from gui_helpers import (
     update_statistics
 )
+from gui_checkbox_files import get_selected_files
 
 
 def select_all(state):
@@ -37,12 +38,7 @@ def select_all(state):
 
     update_statistics(
         state,
-        lambda s: [
-            w.file
-            for w in s.scrollable_frame.winfo_children()
-            if isinstance(w, tk.Checkbutton)
-            and w.variable.get()
-        ]
+        get_selected_files
     )
 
 
@@ -69,5 +65,5 @@ def deselect_all(state):
 
     update_statistics(
         state,
-        lambda s: []
+        get_selected_files
     )

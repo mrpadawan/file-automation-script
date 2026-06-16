@@ -14,8 +14,7 @@ from parser import extract_module
 from mover import move_file
 
 from gui_helpers import (
-    update_status,
-    update_statistics
+    update_status
 )
 
 from gui_discord import (
@@ -98,7 +97,7 @@ def execute_sorting(state):
 
             state.files_listbox.insert(
                 tk.END,
-                f"✓ {file.name}"
+                f"Done: {file.name}"
             )
 
             state.progress["value"] = (
@@ -118,7 +117,7 @@ def execute_sorting(state):
 
         update_status(
             state,
-            f"✅ Finished ({total_files} files moved)"
+            f"Finished ({total_files} files moved)"
         )
 
         send_manual_report(
@@ -133,7 +132,7 @@ def execute_sorting(state):
 
         update_status(
             state,
-            f"❌ {error}"
+            f"Error: {error}"
         )
 
     finally:

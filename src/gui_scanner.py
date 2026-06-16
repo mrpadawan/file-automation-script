@@ -89,5 +89,5 @@ def scan_files(state):
 
         update_status(
             state,
-            f"âŒ {error}"
+            f"Error: {error}"
         )

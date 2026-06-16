@@ -27,7 +27,7 @@ def send_manual_report(moved_files):
     """
 
     report = (
-        "📁 Manual File Sorting Report\n\n"
+        "Manual File Sorting Report\n\n"
     )
 
     report += (
@@ -37,11 +37,11 @@ def send_manual_report(moved_files):
     for file in moved_files:
 
         report += (
-            f"✓ {file}\n"
+            f"- {file}\n"
         )
 
     report += (
-        "\nStatus: Success ✅"
+        "\nStatus: Success"
     )
 
     try:

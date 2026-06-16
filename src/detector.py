@@ -1,3 +1,12 @@
+"""
+File detection functionality.
+
+Responsibilities:
+- Check input folders
+- Return processable files
+- Ignore operating system metadata files
+"""
+
 from pathlib import Path
 
 # Operating system metadata files.
@@ -9,6 +18,7 @@ IGNORED_FILES = [
     "thumbs.db",
     ".ds_store"
 ]
+
 
 def folder_exists(folder_path):
     """

@@ -6,8 +6,6 @@ status reports to configured
 Discord webhooks.
 """
 
-from discord_webhook import DiscordWebhook
-
 from config import (
     MANUAL_DISCORD_WEBHOOK_URL,
     DAILY_DISCORD_WEBHOOK_URL,
@@ -75,7 +73,17 @@ def _send_message(
             Message content.
     """
 
+    if not webhook_url or not webhook_url.startswith(
+            ("http://", "https://")
+    ):
+        print(
+            "Discord webhook not configured; report was not sent."
+        )
+        return
+
     try:
+
+        from discord_webhook import DiscordWebhook
 
         webhook = DiscordWebhook(
             url=webhook_url,

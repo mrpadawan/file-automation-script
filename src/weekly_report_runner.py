@@ -17,7 +17,7 @@ def main():
     """
 
     report = (
-        "📊 Weekly Automation Report\n\n"
+        "Weekly Automation Report\n\n"
     )
 
     report += (
@@ -26,7 +26,7 @@ def main():
     )
 
     report += (
-        "Weekly automation completed successfully. ✅"
+        "Weekly automation completed successfully."
     )
 
     send_weekly_report(
