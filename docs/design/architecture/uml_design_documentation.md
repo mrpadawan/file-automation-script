@@ -208,10 +208,12 @@ and exported as:
 ```txt
 docs/design/
 ├── diagrams/
+│   ├── activity_diagram.drawio
+│   ├── activity_diagram.drawio.png
 │   ├── activity_diagram.puml
-│   ├── component_diagram.puml
-│   ├── activity_diagram.png
-│   └── component_diagram.png
+│   ├── component_diagram.drawio
+│   ├── component_diagram.drawio.png
+│   └── component_diagram.puml
 │
 └── architecture/
     └── uml_design_documentation.md
