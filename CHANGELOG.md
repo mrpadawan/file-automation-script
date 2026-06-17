@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0
+- Add screenshot appendix in the README.md for better documentation.
+  
+## 1.3.0
+- Add CI / Release pipelines for automation.
+  
 ## 1.2.0
 - Removed duplicate test documentation.
 - Remove unused test folders.
