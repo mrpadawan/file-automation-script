@@ -6,7 +6,7 @@ status reports to configured
 Discord webhooks.
 """
 
-from config import (
+from src.shared.config import (
     MANUAL_DISCORD_WEBHOOK_URL,
     DAILY_DISCORD_WEBHOOK_URL,
     WEEKLY_DISCORD_WEBHOOK_URL

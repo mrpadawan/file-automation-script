@@ -12,7 +12,7 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-SRC_PATH = PROJECT_ROOT / "src"
+SRC_PATH = PROJECT_ROOT
 
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
@@ -60,8 +60,8 @@ class TestFileMoverBatch(unittest.TestCase):
         os.environ["DEFAULT_UNKNOWN_PATH"] = str(self.output_folder / "unknown")
         os.environ["MAPPING_FILE"] = str(self.mapping_file)
 
-        import config
-        import mover
+        from src.shared import config
+        from src.sorting import mover
 
         importlib.reload(config)
         self.mover = importlib.reload(mover)

@@ -6,16 +6,16 @@ Responsibilities:
 - Display detected files in the GUI
 """
 
-from detector import scan_folder
-from config import DOWNLOADS_PATH
+from src.core.detector import scan_folder
+from src.shared.config import DOWNLOADS_PATH
 
-from gui_helpers import (
+from src.gui.helpers import (
     reset_interface,
     update_status,
     update_statistics
 )
 
-from gui_checkbox_files import (
+from src.gui.checkbox_files import (
     create_checkboxes,
     get_selected_files
 )

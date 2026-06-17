@@ -46,7 +46,7 @@ jobs:
 
       - name: Build executable
         run: |
-          pyinstaller --onefile --windowed --icon=assets/icon.ico --name="M122 File Organizer" src/gui.py
+          pyinstaller --onefile --windowed --icon=assets/icon.ico --name="M122 File Organizer" src/gui/__main__.py
 
       - name: Prepare release asset
         shell: pwsh

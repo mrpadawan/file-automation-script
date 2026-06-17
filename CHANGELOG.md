@@ -1,11 +1,21 @@
 # Changelog
 
+## 1.5.0
+
+- Reorganized the source code into focused packages for GUI, core scanning,
+  sorting, scheduler, reporting, and shared configuration.
+- Updated imports, tests, documentation, and release build commands for the
+  new package layout.
+- Added `python -m src.gui` as the GUI launch command.
+- Updated the version helper so README version and latest release fields are
+  refreshed automatically during version bumps.
+
 ## 1.4.0
 - Add screenshot appendix in the README.md for better documentation.
-  
+
 ## 1.3.0
 - Add CI / Release pipelines for automation.
-  
+
 ## 1.2.0
 - Removed duplicate test documentation.
 - Remove unused test folders.

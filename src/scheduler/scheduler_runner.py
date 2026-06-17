@@ -18,12 +18,12 @@ Note:
     without user interaction.
 """
 
-from detector import scan_folder
-from parser import extract_module
-from mover import move_file
-from config import DOWNLOADS_PATH
-from scheduler_report import build_report
-from discord_reporter import send_daily_report
+from src.core.detector import scan_folder
+from src.core.parser import extract_module
+from src.sorting.mover import move_file
+from src.shared.config import DOWNLOADS_PATH
+from src.scheduler.scheduler_report import build_report
+from src.reporting.discord_reporter import send_daily_report
 
 
 def process_scheduled_files(files):

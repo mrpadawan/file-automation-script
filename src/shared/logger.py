@@ -13,7 +13,7 @@ Note:
 """
 
 import logging
-from config import LOG_PATH
+from src.shared.config import LOG_PATH
 
 
 logging.basicConfig(

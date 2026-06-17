@@ -7,11 +7,11 @@ Responsibilities:
 - Restore sorting controls
 """
 
-from gui_helpers import (
+from src.gui.helpers import (
     update_checkbox_area,
     update_statistics
 )
-from gui_checkbox_files import get_selected_files
+from src.gui.checkbox_files import get_selected_files
 
 
 def clear_sorted_files(state, sorted_files):

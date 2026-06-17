@@ -5,7 +5,7 @@ Creates and sends manual file
 sorting reports to Discord.
 """
 
-from discord_reporter import (
+from src.reporting.discord_reporter import (
     send_manual_report as discord_manual_report
 )
 

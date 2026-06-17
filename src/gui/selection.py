@@ -8,10 +8,10 @@ Provides functionality for:
 
 import tkinter as tk
 
-from gui_helpers import (
+from src.gui.helpers import (
     update_statistics
 )
-from gui_checkbox_files import get_selected_files
+from src.gui.checkbox_files import get_selected_files
 
 
 def select_all(state):

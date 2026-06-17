@@ -9,12 +9,12 @@ program flow follows the intended logic.
 
 | Area | File | Breakpoint Purpose | Variables Watched |
 |---|---|---|---|
-| Folder scan loop | `src/detector.py` | Pause inside the `for item in folder.iterdir()` loop to confirm files and user folders are collected while system items are skipped. | `item`, `item.is_file()`, `item.is_dir()`, `items` |
-| Module parsing | `src/parser.py` | Pause after the regex search to confirm valid file and folder names return a module and invalid names return `None`. | `filename`, `match`, `match.group()` |
-| Destination selection | `src/mover.py` | Pause in `determine_destination()` to verify known modules use mapped folders and unknown modules use the fallback path. | `module`, `MODULE_MAPPING`, `DEFAULT_UNKNOWN_PATH` |
-| Subfolder selection | `src/mover.py` | Step through extension checks to verify PDFs go to Theory, documents go to Exercises, and code files go to Code. | `extension`, `destination_folder`, `SUBFOLDER_MAPPING` |
-| Duplicate handling loop | `src/mover.py` | Pause inside the `while destination_file.exists()` loop to verify `_V2`, `_V3`, and later filenames are generated without overwriting existing files. | `counter`, `destination_file`, `new_name` |
-| Discord reporting | `src/discord_reporter.py` | Step into report functions to verify each report type delegates to the correct webhook URL. | `webhook_url`, `message` |
+| Folder scan loop | `src/core/detector.py` | Pause inside the `for item in folder.iterdir()` loop to confirm files and user folders are collected while system items are skipped. | `item`, `item.is_file()`, `item.is_dir()`, `items` |
+| Module parsing | `src/core/parser.py` | Pause after the regex search to confirm valid file and folder names return a module and invalid names return `None`. | `filename`, `match`, `match.group()` |
+| Destination selection | `src/sorting/mover.py` | Pause in `determine_destination()` to verify known modules use mapped folders and unknown modules use the fallback path. | `module`, `MODULE_MAPPING`, `DEFAULT_UNKNOWN_PATH` |
+| Subfolder selection | `src/sorting/mover.py` | Step through extension checks to verify PDFs go to Theory, documents go to Exercises, and code files go to Code. | `extension`, `destination_folder`, `SUBFOLDER_MAPPING` |
+| Duplicate handling loop | `src/sorting/mover.py` | Pause inside the `while destination_file.exists()` loop to verify `_V2`, `_V3`, and later filenames are generated without overwriting existing files. | `counter`, `destination_file`, `new_name` |
+| Discord reporting | `src/reporting/discord_reporter.py` | Step into report functions to verify each report type delegates to the correct webhook URL. | `webhook_url`, `message` |
 
 ## Error, Warning, and Exception Handling
 

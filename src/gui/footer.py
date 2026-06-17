@@ -3,7 +3,7 @@ For the versioning on the bottom of the GUI.
 """
 import tkinter as tk
 
-from version import __version__
+from src.shared.version import __version__
 
 
 def create_version_label(state):

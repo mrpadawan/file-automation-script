@@ -10,21 +10,21 @@ Responsibilities:
 
 import tkinter as tk
 
-from parser import extract_module
-from mover import move_file
+from src.core.parser import extract_module
+from src.sorting.mover import move_file
 
-from gui_helpers import (
+from src.gui.helpers import (
     update_status
 )
 
-from gui_discord import (
+from src.gui.discord import (
     send_manual_report
 )
 
-from gui_checkbox_files import (
+from src.gui.checkbox_files import (
     get_selected_files
 )
-from gui_sorting_cleanup import clear_sorted_files
+from src.gui.sorting_cleanup import clear_sorted_files
 
 
 def execute_sorting(state):

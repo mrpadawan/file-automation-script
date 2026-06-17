@@ -6,7 +6,7 @@ Sends a weekly summary report.
 
 from datetime import datetime
 
-from discord_reporter import (
+from src.reporting.discord_reporter import (
     send_weekly_report
 )
 

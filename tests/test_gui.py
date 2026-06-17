@@ -10,7 +10,7 @@ from unittest.mock import MagicMock, patch
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-SRC_PATH = PROJECT_ROOT / "src"
+SRC_PATH = PROJECT_ROOT
 
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
@@ -24,9 +24,9 @@ os.environ["MAPPING_FILE"] = str(
     PROJECT_ROOT / "config" / "module_mapping.json"
 )
 
-import gui_selection
-import gui_sorting
-import gui_sorting_cleanup
+from src.gui import selection as gui_selection
+from src.gui import sorting as gui_sorting
+from src.gui import sorting_cleanup as gui_sorting_cleanup
 
 
 class FakeCheckbutton(gui_selection.tk.Checkbutton):
@@ -94,7 +94,7 @@ class TestGUISelection(unittest.TestCase):
 
         self.assertEqual(["M122_Report.pdf"], selected_files)
 
-    @patch("gui_selection.update_statistics")
+    @patch("src.gui.selection.update_statistics")
     def test_select_all(self, mocked_update_statistics):
         """
         Verify that Select All marks every displayed file checkbox as selected
@@ -107,7 +107,7 @@ class TestGUISelection(unittest.TestCase):
         self.second_checkbox.variable.set.assert_called_once_with(True)
         mocked_update_statistics.assert_called_once()
 
-    @patch("gui_selection.update_statistics")
+    @patch("src.gui.selection.update_statistics")
     def test_deselect_all(self, mocked_update_statistics):
         """
         Verify that Deselect All clears every displayed file checkbox and
@@ -120,7 +120,7 @@ class TestGUISelection(unittest.TestCase):
         self.second_checkbox.variable.set.assert_called_once_with(False)
         mocked_update_statistics.assert_called_once()
 
-    @patch("gui_sorting_cleanup.update_checkbox_area")
+    @patch("src.gui.sorting_cleanup.update_checkbox_area")
     def test_clear_sorted_files_keeps_unselected_file(self, mocked_update_area):
         """
         Verify that cleanup removes only moved files and keeps unchecked files
@@ -141,7 +141,7 @@ class TestGUISelection(unittest.TestCase):
         self.state.execute_button.config.assert_not_called()
         mocked_update_area.assert_called_once_with(self.state)
 
-    @patch("gui_sorting_cleanup.update_checkbox_area")
+    @patch("src.gui.sorting_cleanup.update_checkbox_area")
     def test_clear_sorted_files_disables_execute_when_empty(
             self,
             mocked_update_area
@@ -174,12 +174,12 @@ class TestGUISorting(unittest.TestCase):
     Validates the GUI sorting workflow independently from real Tkinter windows.
     """
 
-    @patch("gui_sorting.update_status")
-    @patch("gui_sorting.send_manual_report")
-    @patch("gui_sorting.clear_sorted_files")
-    @patch("gui_sorting.move_file")
-    @patch("gui_sorting.extract_module")
-    @patch("gui_sorting.get_selected_files")
+    @patch("src.gui.sorting.update_status")
+    @patch("src.gui.sorting.send_manual_report")
+    @patch("src.gui.sorting.clear_sorted_files")
+    @patch("src.gui.sorting.move_file")
+    @patch("src.gui.sorting.extract_module")
+    @patch("src.gui.sorting.get_selected_files")
     def test_execute_sorting_shows_destination_path(
             self,
             mocked_get_selected_files,

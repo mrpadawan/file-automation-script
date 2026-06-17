@@ -8,7 +8,7 @@ Responsibilities:
 
 import tkinter as tk
 
-from gui_helpers import (
+from src.gui.helpers import (
     update_statistics,
     update_checkbox_area
 )

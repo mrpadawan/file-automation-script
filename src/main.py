@@ -16,12 +16,12 @@ Note:
 """
 
 
-from detector import scan_folder
-from parser import extract_module
-from mover import move_file
+from src.core.detector import scan_folder
+from src.core.parser import extract_module
+from src.sorting.mover import move_file
 
-from config import DOWNLOADS_PATH
-from logger import logger
+from src.shared.config import DOWNLOADS_PATH
+from src.shared.logger import logger
 
 def process_file(file):
     """

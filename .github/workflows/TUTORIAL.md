@@ -2,7 +2,7 @@
 
 ```powershell
 python src/update_version.py 1.3.0
-git add VERSION src/version.py
+git add VERSION README.md src/shared/version.py
 git commit -m "Bump version to 1.3.0"
 git push origin main
 

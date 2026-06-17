@@ -8,12 +8,12 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-SRC_PATH = PROJECT_ROOT / "src"
+SRC_PATH = PROJECT_ROOT
 
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
 
-from parser import extract_module
+from src.core.parser import extract_module
 
 
 class TestModuleParser(unittest.TestCase):

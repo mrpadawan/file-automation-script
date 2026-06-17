@@ -9,15 +9,15 @@ Responsibilities:
 - Start the application
 """
 
-from gui_footer import create_version_label
-from gui_state import GUIState
-from gui_window import (
+from src.gui.footer import create_version_label
+from src.gui.state import GUIState
+from src.gui.window import (
     create_root,
     create_title,
     create_progress_area
 )
-from gui_buttons import create_buttons
-from gui_file_area import (
+from src.gui.buttons import create_buttons
+from src.gui.file_area import (
     create_checkbox_area,
     create_processed_file_area,
     create_status_label

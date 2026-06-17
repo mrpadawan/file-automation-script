@@ -5,10 +5,10 @@ This script updates the project version
 in the central version files.
 
 Usage:
-    python scripts/update_version.py 1.0.1
+    python src/update_version.py 1.0.1
 
 After updating the version:
-    git add VERSION src/version.py
+    git add VERSION README.md src/shared/version.py
     git commit -m "Bump version to 1.0.1"
     git tag -a v1.0.1 -m "Version 1.0.1"
     git push
@@ -25,20 +25,22 @@ Notes:
     - For my own usage (this and version.py).
 """
 from pathlib import Path
+import re
 import sys
 
 
 VERSION_FILE = Path("VERSION")
-PY_VERSION_FILE = Path("src/version.py")
+PY_VERSION_FILE = Path("src/shared/version.py")
+README_FILE = Path("README.md")
 
 
 def main():
     """
-    Update VERSION and src/version.py.
+    Update VERSION, README.md and src/shared/version.py.
     """
 
     if len(sys.argv) != 2:
-        print("Usage: python scripts/update_version.py 1.0.1")
+        print("Usage: python src/update_version.py 1.0.1")
         return
 
     version = sys.argv[1]
@@ -53,7 +55,40 @@ def main():
         encoding="utf-8"
     )
 
+    update_readme_version(
+        version
+    )
+
     print(f"Updated version to {version}")
+
+
+def update_readme_version(version):
+    """
+    Update the README header version values.
+    """
+
+    content = README_FILE.read_text(
+        encoding="utf-8"
+    )
+
+    content = re.sub(
+        r"Version: \*\*[^*]+\*\*",
+        f"Version: **{version}**",
+        content,
+        count=1
+    )
+
+    content = re.sub(
+        r"Latest Release: \*\*v[^*]+\*\*",
+        f"Latest Release: **v{version}**",
+        content,
+        count=1
+    )
+
+    README_FILE.write_text(
+        content,
+        encoding="utf-8"
+    )
 
 
 if __name__ == "__main__":

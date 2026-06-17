@@ -62,10 +62,10 @@ The activity diagram directly reflects the runtime behavior implemented in:
 
 ```txt
 src/main.py
-src/detector.py
-src/parser.py
-src/logger.py
-src/config.py
+src/core/detector.py
+src/core/parser.py
+src/shared/logger.py
+src/shared/config.py
 ```
 
 The workflow is based on the actual automation logic of the application.

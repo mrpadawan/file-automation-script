@@ -1,10 +1,10 @@
 # M122 File Organizer
 
-Version: **1.4.0**
+Version: **1.5.0**
 
 License: **MIT**
 
-Latest Release: **v1.3.0**
+Latest Release: **v1.5.0**
 
 A configurable Python application that organizes downloaded school files into
 the correct module and file-type folders.
@@ -93,10 +93,10 @@ The implementation follows the activity and component diagrams in
 `docs/design/diagrams`.
 
 1. The application loads `.env`.
-2. `src/config.py` validates the required paths and loads the JSON mapping.
-3. `src/detector.py` scans the configured input folder.
-4. `src/parser.py` searches each item name for an `M<number>` identifier.
-5. `src/mover.py` resolves the module or fallback destination.
+2. `src/shared/config.py` validates the required paths and loads the JSON mapping.
+3. `src/core/detector.py` scans the configured input folder.
+4. `src/core/parser.py` searches each item name for an `M<number>` identifier.
+5. `src/sorting/mover.py` resolves the module or fallback destination.
 6. Files use their extension to determine a category subfolder.
 7. Missing folders are created.
 8. Duplicate names receive the next available version suffix.
@@ -170,7 +170,7 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 Copy-Item .env.example .env
 New-Item -ItemType Directory -Path .\input -Force
-python .\src\gui.py
+python -m src.gui
 ```
 
 Before launching, edit `.env` and `config/module_mapping.json` as explained
@@ -294,7 +294,7 @@ are located.
 ### Graphical Interface
 
 ```powershell
-.\.venv\Scripts\python.exe .\src\gui.py
+.\.venv\Scripts\python.exe -m src.gui
 ```
 
 GUI workflow:
@@ -312,7 +312,7 @@ the application at a real Downloads folder.
 ### Command-Line Workflow
 
 ```powershell
-.\.venv\Scripts\python.exe .\src\main.py
+.\.venv\Scripts\python.exe -m src.main
 ```
 
 This scans once and processes every file in the configured input folder.
@@ -320,7 +320,7 @@ This scans once and processes every file in the configured input folder.
 ### Daily Scheduled Workflow
 
 ```powershell
-.\.venv\Scripts\python.exe .\src\scheduler_runner.py
+.\.venv\Scripts\python.exe -m src.scheduler.scheduler_runner
 ```
 
 This processes all detected files and attempts to send a daily Discord report.
@@ -329,7 +329,7 @@ A valid `DAILY_DISCORD_WEBHOOK_URL` is needed for report delivery.
 ### Weekly Report
 
 ```powershell
-.\.venv\Scripts\python.exe .\src\weekly_report_runner.py
+.\.venv\Scripts\python.exe -m src.scheduler.weekly_report_runner
 ```
 
 This sends the weekly status message through the configured weekly webhook.
@@ -349,7 +349,7 @@ This sends the weekly status message through the configured weekly webhook.
 6. In **Add arguments**, enter:
 
    ```text
-   <project>\src\scheduler_runner.py
+   -m src.scheduler.scheduler_runner
    ```
 
 7. In **Start in**, enter the project root:
@@ -358,7 +358,8 @@ This sends the weekly status message through the configured weekly webhook.
    <project>
    ```
 
-For a weekly report task, use `src\weekly_report_runner.py` as the argument.
+For a weekly report task, use `-m src.scheduler.weekly_report_runner` as the
+argument.
 Using **Start in** is important because the default configuration contains
 project-relative paths.
 
@@ -475,18 +476,26 @@ file-automation-script/
 |   |-- requirements/           Original project proposal
 |   `-- testing/                Test cases, protocol, and debugging evidence
 |-- src/
+|   |-- core/
+|   |   |-- detector.py           Input-folder scanning
+|   |   `-- parser.py             Module extraction
+|   |-- gui/                      Tkinter user interface
+|   |-- reporting/
+|   |   `-- discord_reporter.py   Discord webhook delivery
+|   |-- scheduler/
+|   |   |-- scheduler_runner.py   Daily scheduled workflow
+|   |   |-- scheduler_report.py   Daily report formatting
+|   |   `-- weekly_report_runner.py Weekly report workflow
+|   |-- shared/
+|   |   |-- config.py             Environment and JSON configuration
+|   |   |-- logger.py             File logging
+|   |   `-- version.py            Application version
+|   |-- sorting/
+|   |   |-- mover.py              Destination and movement workflow
+|   |   |-- mover_categories.py   Extension categories
+|   |   `-- mover_filename.py     Duplicate-safe naming
 |   |-- main.py                 Command-line entry point
-|   |-- gui.py                  Graphical entry point
-|   |-- config.py               Environment and JSON configuration
-|   |-- detector.py             Input-folder scanning
-|   |-- parser.py               Module extraction
-|   |-- mover.py                Destination and movement workflow
-|   |-- mover_categories.py     Extension categories
-|   |-- mover_filename.py       Duplicate-safe naming
-|   |-- logger.py               File logging
-|   |-- discord_reporter.py     Discord webhook delivery
-|   |-- scheduler_runner.py     Daily scheduled workflow
-|   `-- weekly_report_runner.py Weekly report workflow
+|   `-- update_version.py       Version bump helper
 |-- tests/                      Automated unit tests
 |   |-- test_detector.py        Detection tests
 |   |-- test_parser.py          Parser tests
@@ -557,7 +566,7 @@ requirements to the implemented modules and their automated tests.
 With the virtual environment active:
 
 ```powershell
-pyinstaller --onefile --windowed --icon=assets/icon.ico --name="M122 File Organizer" src/gui.py
+pyinstaller --onefile --windowed --icon=assets/icon.ico --name="M122 File Organizer" src/gui/__main__.py
 ```
 
 The executable is created in `dist`. The `.env` file and

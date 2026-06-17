@@ -11,11 +11,11 @@ Responsibilities:
 from pathlib import Path
 import shutil
 
-from config import MODULE_MAPPING
-from config import DEFAULT_UNKNOWN_PATH
-from config import SUBFOLDER_MAPPING
-from mover_categories import get_subfolder_key
-from mover_filename import generate_filename
+from src.shared.config import MODULE_MAPPING
+from src.shared.config import DEFAULT_UNKNOWN_PATH
+from src.shared.config import SUBFOLDER_MAPPING
+from src.sorting.mover_categories import get_subfolder_key
+from src.sorting.mover_filename import generate_filename
 
 
 def determine_destination(module):

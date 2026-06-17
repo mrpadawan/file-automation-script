@@ -238,7 +238,7 @@ open as real PDF or Word documents.
 Start the GUI:
 
 ```powershell
-.\.venv\Scripts\python.exe .\src\gui.py
+.\.venv\Scripts\python.exe -m src.gui
 ```
 
 In the application:
@@ -326,7 +326,7 @@ Before processing real files:
 Open PowerShell in the project folder and run:
 
 ```powershell
-.\.venv\Scripts\python.exe .\src\gui.py
+.\.venv\Scripts\python.exe -m src.gui
 ```
 
 Then:
@@ -345,7 +345,7 @@ Virtual-environment activation is not required when the full
 To process every detected file without the GUI:
 
 ```powershell
-.\.venv\Scripts\python.exe .\src\main.py
+.\.venv\Scripts\python.exe -m src.main
 ```
 
 This performs one scan and then exits.
@@ -390,7 +390,7 @@ The application can run automatically at a chosen time.
 7. In **Add arguments**, enter:
 
    ```text
-   C:\full\path\to\project\src\scheduler_runner.py
+   -m src.scheduler.scheduler_runner
    ```
 
 8. In **Start in**, enter:
@@ -409,7 +409,7 @@ The scheduled runner processes all files and uses
 Repeat the steps above, but use:
 
 ```text
-C:\full\path\to\project\src\weekly_report_runner.py
+-m src.scheduler.weekly_report_runner
 ```
 
 and configure `WEEKLY_DISCORD_WEBHOOK_URL`.
@@ -452,7 +452,7 @@ The next available suffix is selected automatically.
 Run it with console output visible:
 
 ```powershell
-.\.venv\Scripts\python.exe .\src\gui.py
+.\.venv\Scripts\python.exe -m src.gui
 ```
 
 Read the displayed error. Then check that Python, dependencies, `.env`, and the

@@ -34,19 +34,25 @@ The source folder separates application logic from documentation and generated d
 ### Modules
 
 - main.py  
-  Entry point of the application.
+  Command-line entry point of the application.
 
-- detector.py  
-  Detects and validates files from the input directory.
+- core/  
+  Detects files and extracts module information from filenames.
 
-- parser.py  
-  Extracts module information from filenames.
+- sorting/  
+  Resolves destinations, category folders, and duplicate-safe names.
 
-- logger.py  
-  Handles logging functionality.
+- gui/  
+  Contains the Tkinter interface modules.
 
-- config.py  
-  Stores environment configuration and constants.
+- scheduler/  
+  Contains daily and weekly automation runners.
+
+- reporting/  
+  Contains Discord webhook delivery.
+
+- shared/  
+  Stores environment configuration, logging, and version constants.
 
 ---
 

@@ -8,12 +8,12 @@ Responsibilities:
 
 import tkinter as tk
 
-from gui_file_operations import (
+from src.gui.file_operations import (
     scan_files,
     execute_sorting
 )
 
-from gui_selection import (
+from src.gui.selection import (
     select_all,
     deselect_all
 )

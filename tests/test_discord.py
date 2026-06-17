@@ -12,7 +12,7 @@ from unittest.mock import patch
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-SRC_PATH = PROJECT_ROOT / "src"
+SRC_PATH = PROJECT_ROOT
 
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
@@ -45,8 +45,8 @@ class TestDiscordReporter(unittest.TestCase):
         os.environ["DAILY_DISCORD_WEBHOOK_URL"] = "https://example.com/daily"
         os.environ["WEEKLY_DISCORD_WEBHOOK_URL"] = "https://example.com/weekly"
 
-        import config
-        import discord_reporter
+        from src.shared import config
+        from src.reporting import discord_reporter
 
         importlib.reload(config)
         self.discord_reporter = importlib.reload(discord_reporter)
@@ -58,7 +58,7 @@ class TestDiscordReporter(unittest.TestCase):
 
         self.temporary_directory.cleanup()
 
-    @patch("discord_reporter._send_message")
+    @patch("src.reporting.discord_reporter._send_message")
     def test_manual_report(self, mocked_send_message):
         """
         Verify that a manual report uses the manual Discord webhook endpoint.
@@ -71,7 +71,7 @@ class TestDiscordReporter(unittest.TestCase):
             "Manual report"
         )
 
-    @patch("discord_reporter._send_message")
+    @patch("src.reporting.discord_reporter._send_message")
     def test_daily_report(self, mocked_send_message):
         """
         Verify that a daily report uses the daily Discord webhook endpoint.
@@ -84,7 +84,7 @@ class TestDiscordReporter(unittest.TestCase):
             "Daily report"
         )
 
-    @patch("discord_reporter._send_message")
+    @patch("src.reporting.discord_reporter._send_message")
     def test_weekly_report(self, mocked_send_message):
         """
         Verify that a weekly report uses the weekly Discord webhook endpoint.
