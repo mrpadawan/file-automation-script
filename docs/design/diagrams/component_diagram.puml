@@ -1,0 +1,55 @@
+@startuml
+
+skinparam backgroundColor transparent
+skinparam shadowing false
+skinparam componentStyle rectangle
+
+title Automated Download Organizer - Component Diagram
+
+package "Python Application" {
+    [main.py] as MAIN
+    [detector.py] as DETECTOR
+    [parser.py] as PARSER
+    [logger.py] as LOGGER
+    [config.py] as CONFIG
+}
+
+package "Configuration" {
+    file ".env" as ENV
+    file "module_mapping.json" as JSON
+}
+
+package "Discord" {
+    file "chatbot" as RPT
+}
+
+package "Filesystem" {
+    folder "Downloads folder" as DOWNLOADS
+    folder "Module folders" as MODULES
+    folder "Unknown files folder" as UNKNOWN
+    folder "Logs folder" as LOGS
+}
+
+MAIN --> CONFIG : Loads configuration
+MAIN --> LOGGER : Initializes logging
+MAIN --> DETECTOR : Starts file detection
+MAIN --> PARSER : Requests filename parsing
+
+CONFIG --> ENV : Reads environment variables
+CONFIG --> JSON : Loads module mapping
+
+DETECTOR --> DOWNLOADS : Scans files
+
+PARSER --> CONFIG : Validates modules
+
+MAIN --> MODULES : Moves valid files
+MAIN --> UNKNOWN : Moves unsupported files
+
+LOGGER --> LOGS : Writes log entries
+LOGS --> RPT : Sends report summary to user
+
+MAIN --> LOGGER : Logs runtime events
+DETECTOR --> LOGGER : Logs detection events
+PARSER --> LOGGER : Logs parsing warnings/errors
+
+@enduml
