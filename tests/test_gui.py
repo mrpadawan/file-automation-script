@@ -2,6 +2,7 @@
 Unit tests for GUI selection behavior.
 """
 
+import os
 import sys
 import unittest
 from pathlib import Path
@@ -13,6 +14,15 @@ SRC_PATH = PROJECT_ROOT / "src"
 
 if str(SRC_PATH) not in sys.path:
     sys.path.insert(0, str(SRC_PATH))
+
+os.environ["DOWNLOADS_PATH"] = str(PROJECT_ROOT / "tests" / "test_input")
+os.environ["LOG_PATH"] = str(PROJECT_ROOT / "logs")
+os.environ["DEFAULT_UNKNOWN_PATH"] = str(
+    PROJECT_ROOT / "tests" / "test_output" / "unknown"
+)
+os.environ["MAPPING_FILE"] = str(
+    PROJECT_ROOT / "config" / "module_mapping.json"
+)
 
 import gui_selection
 import gui_sorting

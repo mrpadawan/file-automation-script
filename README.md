@@ -1,10 +1,10 @@
 # M122 File Organizer
 
-Version: **1.2.0**
+Version: **1.4.0**
 
 License: **MIT**
 
-Latest Release: **v1.1.0**
+Latest Release: **v1.3.0**
 
 A configurable Python application that organizes downloaded school files into
 the correct module and file-type folders.
@@ -658,11 +658,12 @@ The PyInstaller build creates a Windows executable in the `dist` folder.
 
 ![Built Windows executable in dist folder](docs/screenshots/13-14-built-executable.png)
 
-### Discord Reporting Note
+### Discord Daily Report
 
-A Discord message screenshot is not included because the company network blocks
-the required connection. Discord reporting is still covered by the configuration
-example and the automated tests for manual, daily, and weekly report routing.
+When configured, the scheduled runner can send a daily Discord report with the
+number of moved files, errors, processed filenames, and final status.
+
+![Discord daily file automation report](docs/screenshots/11-discord-daily-report.png)
 
 ## Author
 
