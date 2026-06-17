@@ -223,3 +223,6 @@ logs/
 # PyInstaller output
 build/
 dist/
+
+# Hide Output (if using standard settings)
+output/
