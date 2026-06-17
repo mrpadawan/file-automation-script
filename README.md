@@ -128,16 +128,6 @@ Testing documentation:
 
 ## 7. Screenshot Evidence
 
-Key workflow screenshots:
-
-![GUI after scan](docs/screenshots/03-gui-after-scan.png)
-
-![Sorted output folder](docs/screenshots/06-output-folder-sorted.png)
-
-![Module mapping JSON](docs/screenshots/09-module-mapping-json.png)
-
-![Discord daily report](docs/screenshots/11-discord-daily-report.png)
-
 | Evidence | Screenshot |
 |---|---|
 | Empty GUI before scanning | [01-main-window-empty.png](docs/screenshots/01-main-window-empty.png) |
