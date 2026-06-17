@@ -7,12 +7,15 @@ License: **MIT**
 Python project for Module 122. It automates sorting downloaded school files
 into module folders.
 
+For installation, configuration, Discord setup, and daily use, see
+[INSTRUCTIONS.md](INSTRUCTIONS.md).
+
 ## 1. Introduction and Context
 
 The approved project proposal was **Automated Download Organizer for School**.
-Every day, school files are downloaded from Microsoft Teams, GitLab, browsers,
-and similar platforms. They usually land in one Downloads folder and then have
-to be moved manually into module folders such as `M122`, `M114`, or `M293`.
+School files from Microsoft Teams, GitLab, browsers, and similar platforms
+usually land in one Downloads folder. They then have to be moved manually into
+module folders such as `M122`, `M114`, or `M293`.
 
 This project automates that task. It scans one configured input folder, reads a
 module code from each file or folder name, and moves the item to the configured
@@ -32,7 +35,7 @@ Implemented:
 - create missing destination folders;
 - prevent overwrites with `_V2`, `_V3`, and later suffixes;
 - write logs to `logs/application.log`;
-- run through the command line, a simple Tkinter GUI, or Windows Task Scheduler;
+- run through the command line, Tkinter GUI, or Windows Task Scheduler;
 - optionally send manual, daily, and weekly Discord reports;
 - verify behavior with automated unit tests.
 
@@ -44,9 +47,9 @@ Not implemented:
 - continuous background watching without being started manually or by Task
   Scheduler.
 
-The core project is still the file-sorting script from the proposal. The
-Tkinter GUI is only an optional local helper for scanning, selecting, and
-starting the same automation.
+The core project is the file-sorting script from the proposal. The Tkinter GUI
+is only an optional local helper for scanning, selecting, and starting the same
+automation.
 
 ## 3. Requirements
 
@@ -89,7 +92,7 @@ The project followed the waterfall phases required by Module 122.
 | Design | Folder workflow, module mapping, UML diagrams. | Activity and component diagrams. |
 | Development | Detection, parsing, moving, config, logging, GUI, scheduler, reports. | Working Python application. |
 | Testing | Unit tests, edge cases, debugging, test protocol. | 24 passing tests and documented results. |
-| Deployment | Optional local execution setup. | Instructions for GUI, CLI, and Task Scheduler. |
+| Deployment | Optional local execution setup. | GUI, CLI, and Task Scheduler instructions. |
 
 ## 5. Design
 
@@ -104,86 +107,11 @@ The project is split into small modules:
 
 Design documents:
 
-- `docs/design/diagrams/activity_diagram.drawio.png`
-- `docs/design/diagrams/component_diagram.drawio.png`
-- `docs/design/architecture/uml_design_documentation.md`
+- [Activity diagram](docs/design/diagrams/activity_diagram.drawio.png)
+- [Component diagram](docs/design/diagrams/component_diagram.drawio.png)
+- [UML design documentation](docs/design/architecture/uml_design_documentation.md)
 
-## 6. Configuration
-
-Copy `.env.example` to `.env` and edit the paths:
-
-```env
-DOWNLOADS_PATH=./input
-LOG_PATH=./logs
-DEFAULT_UNKNOWN_PATH=./output/unknown
-MAPPING_FILE=./config/module_mapping.json
-
-MANUAL_DISCORD_WEBHOOK_URL=
-DAILY_DISCORD_WEBHOOK_URL=
-WEEKLY_DISCORD_WEBHOOK_URL=
-```
-
-Configure module destinations in `config/module_mapping.json`:
-
-```json
-{
-    "modules": {
-        "M122": "./output/M122",
-        "M114": "./output/M114"
-    },
-    "subfolders": {
-        "exercise": "Exercises",
-        "executables": "Executables",
-        "archives": "Archives",
-        "theory": "Theory",
-        "code": "Code"
-    }
-}
-```
-
-Use forward slashes in Windows paths, for example:
-
-```json
-"M122": "C:/Users/YourName/Documents/School/M122"
-```
-
-## 7. Running the Project
-
-Install dependencies:
-
-```powershell
-py -m venv .venv
-.\.venv\Scripts\python.exe -m pip install --upgrade pip
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-```
-
-Run the GUI:
-
-```powershell
-.\.venv\Scripts\python.exe -m src.gui
-```
-
-Run the command-line sorter:
-
-```powershell
-.\.venv\Scripts\python.exe -m src.main
-```
-
-Run the daily scheduled workflow manually:
-
-```powershell
-.\.venv\Scripts\python.exe -m src.scheduler.scheduler_runner
-```
-
-Detailed setup instructions are in `INSTRUCTIONS.md`.
-
-## 8. Testing
-
-Run all tests:
-
-```powershell
-.\.venv\Scripts\python.exe -m unittest discover tests
-```
+## 6. Testing
 
 Latest verified result:
 
@@ -194,14 +122,41 @@ OK
 
 Testing documentation:
 
-- `docs/testing/test_cases.md`
-- `docs/testing/test_protocol.md`
-- `docs/testing/debugging.md`
+- [Test cases](docs/testing/test_cases.md)
+- [Test protocol](docs/testing/test_protocol.md)
+- [Debugging notes](docs/testing/debugging.md)
 
-## 9. Documentation Map
+## 7. Screenshot Evidence
 
-- `README.md`: main project documentation.
-- `INSTRUCTIONS.md`: installation and usage guide.
+Key workflow screenshots:
+
+![GUI after scan](docs/screenshots/03-gui-after-scan.png)
+
+![Sorted output folder](docs/screenshots/06-output-folder-sorted.png)
+
+![Module mapping JSON](docs/screenshots/09-module-mapping-json.png)
+
+![Discord daily report](docs/screenshots/11-discord-daily-report.png)
+
+| Evidence | Screenshot |
+|---|---|
+| Empty GUI before scanning | [01-main-window-empty.png](docs/screenshots/01-main-window-empty.png) |
+| Input folder before scan | [02-input-folder-before-scan.png](docs/screenshots/02-input-folder-before-scan.png) |
+| GUI after scan | [03-gui-after-scan.png](docs/screenshots/03-gui-after-scan.png) |
+| GUI file selection | [04-gui-selection.png](docs/screenshots/04-gui-selection.png) |
+| GUI after sorting | [05-gui-after-sorting.png](docs/screenshots/05-gui-after-sorting.png) |
+| Sorted output folder | [06-output-folder-sorted.png](docs/screenshots/06-output-folder-sorted.png) |
+| Duplicate handling | [07-duplicate-handling.png](docs/screenshots/07-duplicate-handling.png) |
+| Environment configuration | [08-env-example-config-blurred.png](docs/screenshots/08-env-example-config-blurred.png) |
+| Module mapping JSON | [09-module-mapping-json.png](docs/screenshots/09-module-mapping-json.png) |
+| Discord daily report | [11-discord-daily-report.png](docs/screenshots/11-discord-daily-report.png) |
+| Task Scheduler setup | [12-task-scheduler.png](docs/screenshots/12-task-scheduler.png) |
+| Built executable | [13-14-built-executable.png](docs/screenshots/13-14-built-executable.png) |
+
+## 8. Documentation Map
+
+- `README.md`: project overview, requirements, design, testing, and evidence.
+- [INSTRUCTIONS.md](INSTRUCTIONS.md): installation, configuration, Discord, and usage.
 - `docs/testing`: test cases, protocol, and debugging evidence.
 - `docs/design`: UML diagrams and short design explanation.
 - `docs/requirements/Official_Project_Proposal.docx`: approved project proposal.

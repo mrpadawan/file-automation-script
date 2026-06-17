@@ -169,7 +169,38 @@ Weekly Discord report:
 .\.venv\Scripts\python.exe -m src.scheduler.weekly_report_runner
 ```
 
-## 7. Use the Real Downloads Folder
+## 7. Optional Discord Setup
+
+Discord reports use webhook URLs from `.env`. Leave the values empty if reports
+are not needed.
+
+| Setting | Used For |
+|---|---|
+| `MANUAL_DISCORD_WEBHOOK_URL` | Report after GUI sorting. |
+| `DAILY_DISCORD_WEBHOOK_URL` | Report from `src.scheduler.scheduler_runner`. |
+| `WEEKLY_DISCORD_WEBHOOK_URL` | Report from `src.scheduler.weekly_report_runner`. |
+
+To configure Discord:
+
+1. Open the Discord channel settings.
+2. Go to **Integrations** and create or select a webhook.
+3. Copy the webhook URL.
+4. Open `.env`.
+5. Paste the URL into the matching setting:
+
+```env
+MANUAL_DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
+DAILY_DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
+WEEKLY_DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
+```
+
+Only fill in the reports you want to use. Webhook URLs are private, so do not
+put real URLs in screenshots, GitHub commits, or public documentation.
+
+If a webhook is empty or invalid, sorting still works. The program only skips
+the Discord report.
+
+## 8. Use the Real Downloads Folder
 
 Only do this after the safe test works.
 
@@ -189,7 +220,7 @@ Before moving real files:
 - scan with the GUI first;
 - select only files that should be moved.
 
-## 8. Run Automated Tests
+## 9. Run Automated Tests
 
 ```powershell
 .\.venv\Scripts\python.exe -m unittest discover tests
@@ -202,7 +233,7 @@ Ran 24 tests
 OK
 ```
 
-## 9. Optional Task Scheduler Setup
+## 10. Optional Task Scheduler Setup
 
 Create a basic task in Windows Task Scheduler.
 
@@ -230,7 +261,7 @@ For the weekly report, use this argument:
 -m src.scheduler.weekly_report_runner
 ```
 
-## 10. Troubleshooting
+## 11. Troubleshooting
 
 `Python was not found`
 
