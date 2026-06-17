@@ -1,0 +1,75 @@
+@startuml
+
+skinparam backgroundColor transparent
+skinparam shadowing false
+
+title Automated Download Organizer - Activity Diagram
+
+start
+
+:Start Python application;
+
+:Load environment variables;
+:Load module mapping configuration;
+:Initialize logging system;
+
+if (Configuration valid?) then (yes)
+
+    :Scan downloads folder;
+
+    if (Files found?) then (yes)
+
+        while (More files available?) is (yes)
+
+            :Read filename;
+            :Validate filename structure;
+
+            if (Valid module pattern?) then (yes)
+
+                :Extract module identifier;
+                :Resolve target folder;
+
+                if (Target folder exists?) then (yes)
+                else (no)
+                    :Create missing folder;
+                    :Log folder creation;
+                endif
+
+                :Check duplicate filename;
+
+                if (Duplicate exists?) then (yes)
+                    :Generate safe filename;
+                    :Log duplicate handling;
+                else (no)
+                endif
+
+                :Move file to target folder;
+
+                if (Move successful?) then (yes)
+                    :Log successful file move;
+                else (no)
+                    :Log file move error;
+                endif
+
+            else (no)
+                :Log invalid filename warning;
+            endif
+
+        endwhile (no)
+
+        :Log processing summary;
+
+    else (no)
+        :Log no files found;
+    endif
+
+else (no)
+    :Log configuration error;
+endif
+
+:Close logging system;
+:Write report to configured Discord account;
+
+stop
+
+@enduml
