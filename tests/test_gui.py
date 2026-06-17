@@ -174,6 +174,24 @@ class TestGUISorting(unittest.TestCase):
     Validates the GUI sorting workflow independently from real Tkinter windows.
     """
 
+    def test_format_moved_summary_counts_files_and_folders(self):
+        """
+        Verify that moved item counts use singular/plural file and folder text.
+        """
+
+        self.assertEqual(
+            "1 file moved",
+            gui_sorting.format_moved_summary(1, 0)
+        )
+        self.assertEqual(
+            "1 folder moved",
+            gui_sorting.format_moved_summary(0, 1)
+        )
+        self.assertEqual(
+            "1 file & 2 folders moved",
+            gui_sorting.format_moved_summary(1, 2)
+        )
+
     @patch("src.gui.sorting.update_status")
     @patch("src.gui.sorting.send_manual_report")
     @patch("src.gui.sorting.clear_sorted_files")
@@ -225,6 +243,10 @@ class TestGUISorting(unittest.TestCase):
         mocked_clear_sorted_files.assert_called_once_with(
             state,
             [selected_file]
+        )
+        mocked_update_status.assert_any_call(
+            state,
+            "Finished (1 file moved)"
         )
 
 

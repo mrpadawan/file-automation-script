@@ -1,6 +1,6 @@
 # M122 File Organizer
 
-Version: **1.5.0**
+Version: **1.6.0**
 
 License: **MIT**
 

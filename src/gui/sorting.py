@@ -27,6 +27,47 @@ from src.gui.checkbox_files import (
 from src.gui.sorting_cleanup import clear_sorted_files
 
 
+def format_moved_summary(file_count, folder_count):
+    """
+    Format moved item counts for the GUI status line.
+    """
+
+    parts = []
+
+    if file_count:
+
+        file_label = (
+            "file"
+            if file_count == 1
+            else "files"
+        )
+
+        parts.append(
+            f"{file_count} {file_label}"
+        )
+
+    if folder_count:
+
+        folder_label = (
+            "folder"
+            if folder_count == 1
+            else "folders"
+        )
+
+        parts.append(
+            f"{folder_count} {folder_label}"
+        )
+
+    if not parts:
+
+        return "0 files moved"
+
+    return (
+        " & ".join(parts) +
+        " moved"
+    )
+
+
 def execute_sorting(state):
     """
     Execute the file sorting
@@ -76,6 +117,16 @@ def execute_sorting(state):
             total_files
         )
 
+        total_folders = sum(
+            1
+            for file in selected_files
+            if file.is_dir()
+        )
+
+        total_regular_files = (
+            total_files - total_folders
+        )
+
         moved_files = []
 
         for index, file in enumerate(
@@ -121,7 +172,9 @@ def execute_sorting(state):
 
         update_status(
             state,
-            f"Finished ({total_files} files moved)"
+            "Finished ("
+            f"{format_moved_summary(total_regular_files, total_folders)}"
+            ")"
         )
 
         send_manual_report(
