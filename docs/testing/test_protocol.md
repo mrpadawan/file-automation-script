@@ -1,36 +1,44 @@
 # M122 File Organizer - Test Protocol
 
-Test execution reference: `.venv\Scripts\python.exe -m unittest discover tests`  
-Execution result: `Ran 20 tests - OK`
+Command:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover tests
+```
+
+Latest execution:
+
+```text
+Ran 24 tests
+OK
+```
+
+Date: 2026-06-17
+
+Tester: Nikola
+
+## Result Table
+
+| ID | Area | Result | Status |
+|---|---|---|---|
+| TC-01 | Detection of files and folders | Files and direct child folders were detected. | PASS |
+| TC-02 | Empty and technical items | Empty input returned no items; technical items were ignored. | PASS |
+| TC-03 | Module parsing | Valid module names returned module codes; invalid names returned `None`. | PASS |
+| TC-04 | File movement | Files moved to the expected module and category folders. | PASS |
+| TC-05 | Folder creation | Missing target folders were created automatically. | PASS |
+| TC-06 | Duplicate handling | Duplicate files and folders received version suffixes. | PASS |
+| TC-07 | Unknown modules | Unknown items used the fallback destination. | PASS |
+| TC-08 | Folder movement | Folders moved as complete units and kept their contents. | PASS |
+| TC-09 | Batch processing | Mixed file sets were processed without data loss. | PASS |
+| TC-10 | GUI selection | Select, select all, and deselect all behaved correctly. | PASS |
+| TC-11 | GUI sorting result | Sorted files were cleared correctly and summaries were accurate. | PASS |
+| TC-12 | Discord reports | Manual, daily, and weekly report routing passed with mocked calls. | PASS |
 
 ## Evidence Files
 
-| Evidence | Purpose |
-|---|---|
-| `tests/test_detector.py` | Automated tests for file and folder detection, ignored folders, and empty input folders. |
-| `tests/test_parser.py` | Automated tests for valid, suffixed, and invalid module extraction. |
-| `tests/test_mover.py` | Automated tests for moving files and folders, folder creation, duplicate handling, and fallback routing. |
-| `tests/test_gui.py` | Automated tests for GUI selection logic. |
-| `tests/test_discord.py` | Automated tests for manual, daily, and weekly Discord report routing with mocked network calls. |
-| `docs/testing/debugging.md` | Debugging evidence, breakpoints, watched variables, and white-box/black-box explanation. |
-
-| Test ID | Date | Tester | Expected Result | Actual Result | Status | Notes |
-|---|---|---|---|---|---|---|
-| TC-001 | 2026-06-07 | Nikola | Files and user folders in the input folder are detected, while technical folders are ignored. | File and folder detection test passed successfully. | PASS | Covered by `test_file_detection` and `test_technical_folder_ignored`. |
-| TC-002 | 2026-06-07 | Nikola | Parser returns `M122` for a valid module filename. | Valid module extraction returned the expected module identifier. | PASS | Covered by `test_valid_module`. |
-| TC-003 | 2026-06-07 | Nikola | Parser returns `None` for a filename without a valid module identifier. | Invalid module extraction returned `None`. | PASS | Covered by `test_invalid_module`. |
-| TC-004 | 2026-06-07 | Nikola | File is moved to the configured module destination. | File was moved successfully into the expected module/category folder. | PASS | Covered by `test_file_move`. |
-| TC-005 | 2026-06-07 | Nikola | Missing module and category folders are created automatically. | Missing destination folders were created and the file was moved successfully. | PASS | Covered by `test_missing_folder_creation`. |
-| TC-006 | 2026-06-07 | Nikola | Duplicate files are renamed without overwriting existing files. | Duplicate file was renamed with `_V2`, and the original file remained unchanged. | PASS | Covered by `test_duplicate_handling`. |
-| TC-007 | 2026-06-07 | Nikola | Only individually selected files are included for processing. | Selected checkbox state returned only the selected file. | PASS | Covered by `test_file_selection`. |
-| TC-008 | 2026-06-07 | Nikola | Select All selects every displayed file checkbox. | All displayed checkbox states were set to selected. | PASS | Covered by `test_select_all`. |
-| TC-009 | 2026-06-07 | Nikola | Deselect All clears every displayed file checkbox. | All displayed checkbox states were set to deselected. | PASS | Covered by `test_deselect_all`. |
-| TC-010 | 2026-06-07 | Nikola | Manual report is sent to the configured manual Discord webhook. | Manual report delegated to the configured manual webhook endpoint. | PASS | Covered by `test_manual_report`; webhook call was mocked. |
-| TC-011 | 2026-06-07 | Nikola | Daily report is sent to the configured daily Discord webhook. | Daily report delegated to the configured daily webhook endpoint. | PASS | Covered by `test_daily_report`; webhook call was mocked. |
-| TC-012 | 2026-06-07 | Nikola | Weekly report is sent to the configured weekly Discord webhook. | Weekly report delegated to the configured weekly webhook endpoint. | PASS | Covered by `test_weekly_report`; webhook call was mocked. |
-| TC-013 | 2026-06-10 | Nikola | Empty input folder returns no files and does not cause an application error. | Empty input folder returned an empty list without raising an exception. | PASS | Covered by `test_empty_input_folder`. |
-| TC-014 | 2026-06-10 | Nikola | Unknown module files are routed to the configured fallback destination. | Unknown module file was moved to the configured fallback destination. | PASS | Covered by `test_unknown_module_uses_fallback_destination`. |
-| TC-015 | 2026-06-10 | Nikola | Large file set is processed accurately without data loss. | Mixed file batch processed successfully; duplicates, known modules, unknown modules, code files, and theory files were moved without data loss. | PASS | Covered by `test_large_mixed_file_set`. |
-| TC-016 | 2026-06-16 | Nikola | User folders appear as processable items. | Folder detection returned the direct child folder. | PASS | Covered by `test_file_detection`. |
-| TC-017 | 2026-06-16 | Nikola | Folders move to the module root and keep contents. | Folder was moved into the module destination root with its contents preserved. | PASS | Covered by `test_folder_move_preserves_contents`. |
-| TC-018 | 2026-06-16 | Nikola | Duplicate folders are renamed without overwriting existing folders. | Duplicate folder was renamed with `_V2`, and the existing folder stayed unchanged. | PASS | Covered by `test_duplicate_folder_handling`. |
+- `tests/test_detector.py`
+- `tests/test_parser.py`
+- `tests/test_mover.py`
+- `tests/test_mover_batch.py`
+- `tests/test_gui.py`
+- `tests/test_discord.py`

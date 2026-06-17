@@ -1,37 +1,38 @@
 # Changelog
 
+## 1.6.0
+
+- Simplified documentation to match the project proposal and current project.
+- Updated test documentation to the current result: 24 passing tests.
+
 ## 1.5.0
 
 - Reorganized the source code into focused packages for GUI, core scanning,
   sorting, scheduler, reporting, and shared configuration.
-- Updated imports, tests, documentation, and release build commands for the
-  new package layout.
 - Added `python -m src.gui` as the GUI launch command.
-- Updated the version helper so README version and latest release fields are
-  refreshed automatically during version bumps.
+- Updated imports, tests, documentation, and release build commands for the new
+  package layout.
 
 ## 1.4.0
-- Add screenshot appendix in the README.md for better documentation.
+
+- Added screenshot evidence for the main workflows.
 
 ## 1.3.0
-- Add CI / Release pipelines for automation.
+
+- Added CI and release automation.
 
 ## 1.2.0
+
 - Removed duplicate test documentation.
-- Remove unused test folders.
-- Added MIT LICENSE. (post release)
+- Added MIT license.
 
 ## 1.1.0
 
-- Added support for detecting folders in the input folder.
-- Added support for moving folders as complete units.
-- Added duplicate-safe folder naming with `_V2`, `_V3`, and later suffixes.
-- Added folder-related tests for detection, moving, duplicates, unknown folders,
-  and preserved contents.
-- Updated documentation for folder support.
+- Added support for detecting and moving folders.
+- Added duplicate-safe folder naming.
+- Added folder-related tests.
 
 ## 1.0.0
 
-- First stable release.
-- Included file scanning, module parsing, file moving, duplicate-safe filenames,
-  GUI support, scheduled automation, Discord reports, and automated tests.
+- First stable release with scanning, parsing, moving, duplicate handling, GUI,
+  scheduled automation, Discord reports, and automated tests.
